@@ -2,7 +2,7 @@
   <page-layout :avatar="currUser.avatar">
     <div slot="headerContent">
       <div class="title">{{welcome.timeFix[lang]}}，{{currUser.name}}，{{welcome.message[lang]}}</div>
-      <div>{{currUser.position[lang]}}</div>
+     <!-- <div>{{currUser.position[lang]}}</div>-->
     </div>
     <template slot="extra">
       <head-info class="split-right" :title="$t('project')" content="56"/>

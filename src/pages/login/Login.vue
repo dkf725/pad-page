@@ -5,7 +5,7 @@
         <img alt="logo" class="logo" src="@/assets/img/logo.png" />
         <span class="title">{{systemName}}</span>
       </div>
-      <div class="desc">Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+      <div class="desc">design by 苍盐海F4</div>
     </div>
     <div class="login">
       <a-form @submit="onSubmit" :form="form">
@@ -25,7 +25,7 @@
             <a-form-item>
               <a-input
                 size="large"
-                placeholder="888888"
+                placeholder="11111"
                 autocomplete="autocomplete"
                 type="password"
                 v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
@@ -62,10 +62,10 @@
           <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
         </a-form-item>
         <div>
-          其他登录方式
+         <!-- 其他登录方式
           <a-icon class="icon" type="alipay-circle" />
           <a-icon class="icon" type="taobao-circle" />
-          <a-icon class="icon" type="weibo-circle" />
+          <a-icon class="icon" type="weibo-circle" />-->
           <router-link style="float: right" to="/dashboard/workplace" >注册账户</router-link>
         </div>
       </a-form>
@@ -75,9 +75,10 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services/user'
+//import {login, getRoutesConfig} from '@/services/user'
+import {login} from '@/services/user'
 import {setAuthorization} from '@/utils/request'
-import {loadRoutes} from '@/utils/routerUtil'
+//import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
 
 export default {
@@ -97,6 +98,7 @@ export default {
   },
   methods: {
     ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
+    //登录
     onSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err) => {
@@ -111,19 +113,22 @@ export default {
     afterLogin(res) {
       this.logging = false
       const loginRes = res.data
-      if (loginRes.code >= 0) {
+      console.log(loginRes)
+      if (loginRes.code === 200) {
         const {user, permissions, roles} = loginRes.data
         this.setUser(user)
         this.setPermissions(permissions)
         this.setRoles(roles)
         setAuthorization({token: loginRes.data.token, expireAt: new Date(loginRes.data.expireAt)})
-        // 获取路由配置
+       /* // 获取路由配置
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
           loadRoutes(routesConfig)
           this.$router.push('/dashboard/workplace')
           this.$message.success(loginRes.message, 3)
-        })
+        })*/
+        this.$router.push('/dashboard/workplace')
+        this.$message.success(loginRes.message, 3)
       } else {
         this.error = loginRes.message
       }

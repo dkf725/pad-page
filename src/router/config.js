@@ -52,6 +52,26 @@ const options = {
           ]
         },
         {
+          path: 'system',
+          name: '系统管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: BlankView,
+          children: [
+            {
+              path: 'user',
+              name: '用户管理',
+              component: () => import('@/pages/pad/system/user/index'),
+            },
+            {
+              path: 'role',
+              name: '角色管理',
+              component: () => import('@/pages/pad/system/role/index'),
+            }
+          ]
+        },
+        {
           path: 'form',
           name: '表单页',
           meta: {
