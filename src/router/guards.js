@@ -3,6 +3,8 @@ import {loginIgnore} from '@/router/index'
 import {checkAuthorization} from '@/utils/request'
 import NProgress from 'nprogress'
 
+//路由守卫
+
 NProgress.configure({ showSpinner: false })
 
 /**

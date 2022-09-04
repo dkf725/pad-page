@@ -30,6 +30,19 @@ const routerMap = {
     name: '分析页',
     component: () => import('@/pages/dashboard/analysis')
   },
+  //系统管理
+  system:{
+    name: '系统管理',
+    component: view.blank
+  },
+  user: {
+    name: '用户管理',
+    component: () => import('@/pages/pad/system/user/index')
+  },
+  role: {
+    name: '角色管理',
+    component: () => import('@/pages/pad/system/role/index')
+  },
   form: {
     name: '表单页',
     icon: 'form',
