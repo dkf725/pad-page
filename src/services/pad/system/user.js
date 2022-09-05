@@ -1,7 +1,8 @@
 import {request, METHOD} from '@/utils/request'
 
 export default {
-    getUserList
+    getUserList,
+    addUser
 }
 
 
@@ -17,4 +18,17 @@ export function getUserList(current,limit,queryParams){
         `/pad/admin/list/${current}/${limit}`,
         METHOD.POST,
         queryParams)
+}
+
+/**
+ * 添加后台用户
+ * @param form
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function addUser(form){
+    return request(
+        `/pad/admin/add`,
+        METHOD.POST,
+        form
+    )
 }
