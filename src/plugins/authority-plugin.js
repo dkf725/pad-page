@@ -37,7 +37,7 @@ const auth = function(authConfig, permission, role, permissions, roles) {
     return check.apply(this, [permission, role, permissions, roles])
   }
   if (type === 'permission') {
-    return checkFromPermission(check, permission)
+    return checkFromPermission(check, permission) || checkFromPermissions(check, permissions)
   } else if (type === 'role') {
     return checkFromRoles(check, role)
   } else {
@@ -46,13 +46,32 @@ const auth = function(authConfig, permission, role, permissions, roles) {
 }
 
 /**
- * 检查权限是否有操作权限
+ * 检查权限是否有操作权限 路由
  * @param check 需要检查的操作权限
  * @param permission 权限
  * @returns {boolean}
  */
 const checkFromPermission = function(check, permission) {
-  return permission && permission.operation && permission.operation.indexOf(check) !== -1
+  /*return permission && permission.operation && permission.operation.indexOf(check) !== -1*/
+  return permission && permission.indexOf(check) !== -1
+}
+
+/**
+ * 检查权限是否有操作权限 操作
+ * @param check 需要检查的操作权限
+ * @param permission 权限
+ * @returns {boolean}
+ */
+const checkFromPermissions = function(check, permissions) {
+  if (!permissions) {
+    return false
+  }
+  for (let permission of permissions) {
+    if (permission && permission.indexOf(check) !== -1) {
+      return true
+    }
+  }
+  return false
 }
 
 /**
@@ -66,8 +85,7 @@ const checkFromRoles = function(check, roles) {
     return false
   }
   for (let role of roles) {
-    const {operation} = role
-    if (operation && operation.indexOf(check) !== -1) {
+    if (role && role.indexOf(check) !== -1) {
       return true
     }
   }
@@ -87,17 +105,14 @@ const checkInject = function (el, binding,vnode) {
 }
 
 const addDisabled = function (el) {
-  if (el.tagName === 'BUTTON') {
-    el.disabled = true
-  } else {
-    el.classList.add('disabled')
-  }
+  el.disabled = true
+  el.classList.add('is-disabled')
   el.setAttribute('title', '无此权限')
 }
 
 const removeDisabled = function (el) {
   el.disabled = false
-  el.classList.remove('disabled')
+  el.classList.remove('is-disabled')
   el.removeAttribute('title')
 }
 
@@ -116,6 +131,7 @@ const AuthorityPlugin = {
     })
     Vue.mixin({
       beforeCreate() {
+        /*this.$options 获取自定义属性*/
         if (this.$options.authorize) {
           const authorize = this.$options.authorize
           Object.keys(authorize).forEach(key => {

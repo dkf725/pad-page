@@ -53,30 +53,8 @@
            icon="el-icon-plus"
            size="mini"
            @click="handleAdd"
+           v-auth:permission="`system:user:add`"
        >新增</el-button>
-       <!--v-auth:permission="`system:user:add`"-->
-     </el-col>
-     <el-col :span="1.5">
-       <el-button
-           type="success"
-           plain
-           icon="el-icon-edit"
-           size="mini"
-           :disabled="single"
-           @click="handleUpdate"
-           v-auth:permission="`system:user:edit`"
-       >修改</el-button>
-     </el-col>
-     <el-col :span="1.5">
-       <el-button
-           type="danger"
-           plain
-           icon="el-icon-delete"
-           size="mini"
-           :disabled="multiple"
-           @click="handleDelete"
-           v-auth:permission="`system:user:remove`"
-       >删除</el-button>
      </el-col>
      <el-col :span="1.5">
        <el-button
@@ -124,7 +102,7 @@
          width="180"
          class-name="small-padding fixed-width"
      >
-       <template slot-scope="scope" v-if="scope.row.id !== 1">
+       <template slot-scope="scope" v-if="scope.row.id != 1">
          <el-button
              size="mini"
              type="text"
@@ -139,10 +117,8 @@
              @click="handleDelete(scope.row)"
              v-auth:permission="`system:user:remove`"
          >删除</el-button>
-         <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)"
-                      v-auth:permission="`['system:user:resetPwd', 'system:user:edit']`" >
-           <!-- v-auth 指定权限 -->
-            <span class="el-dropdown-link">
+         <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)">
+            <span class="el-dropdown-link"  style="color:#66b1ff;">
               <i class="el-icon-d-arrow-right el-icon--right"></i>更多
             </span>
            <el-dropdown-menu slot="dropdown">
@@ -237,7 +213,7 @@
 
 <script>
 
-import {getUserList,addUser} from '@/services/pad/system/user';
+import {getUserList,addUser,changeStatus,editUser} from '@/services/pad/system/user';
 import {getRoleOptions} from "@/services/pad/system/role";
 
 export default {
@@ -255,7 +231,8 @@ export default {
       title: "",//对话框标题
       open: false,//显示对话框
       form: {
-        isDeleted:1
+        isDeleted:1,
+        roleIds:[]
       },//添加修改表单
       roleOptions:[],//角色选项
       rules: {//表单校验
@@ -320,16 +297,25 @@ export default {
     handleAdd(){
       //修改title
       this.title = '添加用户'
+      //清空表单
+      this.$refs["form"].resetFields();
       //打开对话框
       this.open = true
     },
     //修改状态
-    handleStatusChange(){
-
+    handleStatusChange(row){
+      changeStatus(row).then(res=>{
+        this.$message.success(res.data.message)
+      })
     },
     //修改按钮
-    handleUpdate(){
-
+    handleUpdate(row){
+      //TODO 从数据库中查询
+      row.id
+      //修改title
+      this.title = '修改用户'
+      //打开对话框
+      this.open = true
     },
     //删除按钮
     handleDelete(){
@@ -359,6 +345,14 @@ export default {
         if (valid){
           if (this.form.id != undefined){
             //有用户id 修改操作
+            editUser(this.form).then(res=>{
+              //关闭弹框
+              this.open = false
+              //提示成功
+              this.$message.success(res.data.message)
+              //刷新页面
+              this.getList()
+            })
           }else {
             //无用户id 添加操作
             addUser(this.form).then(res=>{
@@ -372,6 +366,10 @@ export default {
           }
         }
       })
+    },
+    //取消
+    cancel(){
+      this.open = false
     }
   }
 }

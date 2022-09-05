@@ -2,7 +2,9 @@ import {request, METHOD} from '@/utils/request'
 
 export default {
     getUserList,
-    addUser
+    addUser,
+    changeStatus,
+    editUser
 }
 
 
@@ -30,5 +32,31 @@ export function addUser(form){
         `/pad/admin/add`,
         METHOD.POST,
         form
+    )
+}
+
+/**
+ * 修改状态
+ * @param row
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function changeStatus(row){
+    return request(
+        `/pad/admin/changeStatus`,
+        METHOD.PUT,
+        row
+    )
+}
+
+/**
+ * 修改用户信息
+ * @param from
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function editUser(from){
+    return request(
+        `/pad/admin/edit`,
+        METHOD.PUT,
+        from
     )
 }
