@@ -61,13 +61,13 @@
         <a-form-item>
           <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
         </a-form-item>
-        <div>
-         <!-- 其他登录方式
+        <!--其他登录方式-->
+       <!-- <div>
           <a-icon class="icon" type="alipay-circle" />
           <a-icon class="icon" type="taobao-circle" />
-          <a-icon class="icon" type="weibo-circle" />-->
+          <a-icon class="icon" type="weibo-circle" />
           <router-link style="float: right" to="/dashboard/workplace" >注册账户</router-link>
-        </div>
+        </div>-->
       </a-form>
     </div>
   </common-layout>
@@ -103,7 +103,6 @@ export default {
       e.preventDefault()
       this.form.validateFields((err) => {
         if (!err) {
-          this.logging = true
           const name = this.form.getFieldValue('name')
           const password = this.form.getFieldValue('password')
           login(name, password).then(this.afterLogin)

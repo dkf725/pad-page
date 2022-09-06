@@ -20,9 +20,9 @@
            @keyup.enter.native="handleQuery"
        />
      </el-form-item>
-     <el-form-item label="状态" prop="isDeleted">
+     <el-form-item label="状态" prop="status">
        <el-select
-           v-model="queryParams.isDeleted"
+           v-model="queryParams.status"
            placeholder="用户状态"
            clearable
            style="width: 240px"
@@ -58,6 +58,17 @@
      </el-col>
      <el-col :span="1.5">
        <el-button
+           type="danger"
+           plain
+           icon="el-icon-delete"
+           size="mini"
+           :disabled="multiple"
+           @click="handleDelete"
+           v-auth:permission="['system:user:remove']"
+       >删除</el-button>
+     </el-col>
+     <el-col :span="1.5">
+       <el-button
            type="info"
            plain
            icon="el-icon-upload2"
@@ -84,10 +95,10 @@
      <el-table-column label="用户名称" align="center" key="name" prop="name"/>
      <el-table-column label="用户邮箱" align="center" key="email" prop="email"/>
      <el-table-column label="手机号码" align="center" key="phone" prop="phone"  width="180"/>
-     <el-table-column label="状态" align="center" key="isDeleted">
+     <el-table-column label="状态" align="center" key="status">
        <template slot-scope="scope">
          <el-switch
-             v-model="scope.row.isDeleted"
+             v-model="scope.row.status"
              active-color="#13ce66"
              inactive-color="#ff4949"
              :active-value="1"
@@ -174,7 +185,7 @@
        <el-row>
          <el-col :span="18">
            <el-form-item label="状态">
-             <el-radio-group v-model="form.isDeleted">
+             <el-radio-group v-model="form.status">
                <el-radio
                    :key="1"
                    :label="1"
@@ -213,7 +224,8 @@
 
 <script>
 
-import {getUserList,addUser,changeStatus,editUser} from '@/services/pad/system/user';
+import {getUserList,addUser,changeStatus,editUser,getUser,delUser}
+  from '@/services/pad/system/user';
 import {getRoleOptions} from "@/services/pad/system/role";
 
 export default {
@@ -225,13 +237,12 @@ export default {
       total:0,//总记录数
       queryParams:{},//条件查询对象
       userList:[],//用户列表
-      single: true,// 非单个禁用
       multiple: true,// 非多个禁用
       ids: [],// 选中数组
       title: "",//对话框标题
       open: false,//显示对话框
       form: {
-        isDeleted:1,
+        status:1,
         roleIds:[]
       },//添加修改表单
       roleOptions:[],//角色选项
@@ -290,8 +301,9 @@ export default {
       this.handleQuery();
     },
     //多选按钮
-    handleSelectionChange(){
-
+    handleSelectionChange(selection){
+      this.ids = selection.map(item => item.id);
+      this.multiple = !selection.length;
     },
     //新增按钮
     handleAdd(){
@@ -304,26 +316,61 @@ export default {
     },
     //修改状态
     handleStatusChange(row){
-      changeStatus(row).then(res=>{
-        this.$message.success(res.data.message)
-      })
+      this.$confirm('确定要停用'+row.name+'用户吗？','系统提示',
+          {
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            type:'warning'
+          }).then(()=>{
+            changeStatus(row).then(res=>{
+              this.$message.success(res.data.message)
+            })
+          })
     },
     //修改按钮
     handleUpdate(row){
-      //TODO 从数据库中查询
-      row.id
+      //从数据库中查询用户
+      getUser(row.id).then(res=>{
+        this.form = res.data.data.admin
+      })
       //修改title
       this.title = '修改用户'
       //打开对话框
       this.open = true
     },
     //删除按钮
-    handleDelete(){
-
+    handleDelete(row){
+      const userIds = row.id || this.ids;
+      this.$confirm('确定要删除编号为'+userIds+'用户吗？','系统提示',
+          {
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            type:'warning'
+          }).then(()=>{
+            delUser(userIds).then(res=>{
+              console.log(res)
+              if (res.data.code >= 0){
+                this.$message.success(res.data.message)
+                //刷新页面
+                this.getList()
+              }else {
+                this.$message.error(res.data.message)
+              }
+            })
+          })
     },
     //更多操作
-    handleCommand(){
-
+    handleCommand(command,row){
+      switch (command) {
+        case "handleResetPwd":
+          this.handleResetPwd(row);
+          break;
+        case "handleAuthRole":
+          this.handleAuthRole(row);
+          break;
+        default:
+          break;
+      }
     },
     //导入Excel
     handleImport(){
@@ -370,6 +417,16 @@ export default {
     //取消
     cancel(){
       this.open = false
+    },
+    //重置密码
+    // eslint-disable-next-line no-unused-vars
+    handleResetPwd(row){
+
+    },
+    //分配角色
+    // eslint-disable-next-line no-unused-vars
+    handleAuthRole(row){
+
     }
   }
 }

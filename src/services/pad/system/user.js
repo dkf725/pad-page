@@ -4,9 +4,10 @@ export default {
     getUserList,
     addUser,
     changeStatus,
-    editUser
+    editUser,
+    getUser,
+    delUser
 }
-
 
 /**
  * 用户列表分页显示
@@ -58,5 +59,29 @@ export function editUser(from){
         `/pad/admin/edit`,
         METHOD.PUT,
         from
+    )
+}
+
+/**
+ * 根据用户id获取用户信息
+ * @param id
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function getUser(id){
+    return request(
+        `/pad/admin/${id}`,
+        METHOD.GET
+    )
+}
+
+/**
+ * 根据用户id逻辑删除用户
+ * @param id
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function delUser(id){
+    return request(
+        `/pad/admin/${id}`,
+        METHOD.DELETE
     )
 }
