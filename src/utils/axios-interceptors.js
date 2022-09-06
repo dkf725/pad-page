@@ -33,8 +33,8 @@ const resp401 = {
 const resp403 = {
   onFulfilled(response, options) {
     const {message} = options
-    if (response.code === 403) {
-      message.error('请求被拒绝')
+    if (response.data.code === 403) {
+      message.error(response.data.message)
     }
     return response
   },

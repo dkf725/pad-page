@@ -15,6 +15,10 @@ import 'moment/locale/zh-cn'
 // eslint-disable-next-line no-unused-vars
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+//引入qs
+import qs from 'qs'
+
+Vue.prototype.$qs = qs
 
 const router = initRouter(store.state.setting.asyncRoutes)
 const i18n = initI18n('CN', 'US')
