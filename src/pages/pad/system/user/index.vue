@@ -103,6 +103,7 @@
              inactive-color="#ff4949"
              :active-value="1"
              :inactive-value="0"
+             v-auth:permission="`system:user:edit`"
              @change="handleStatusChange(scope.row)"
          ></el-switch>
        </template>

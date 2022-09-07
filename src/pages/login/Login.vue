@@ -53,7 +53,6 @@ import {login} from '@/services/user'
 import {setAuthorization} from '@/utils/request'
 //import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
-import Cookie from 'js-cookie'
 
 export default {
   name: 'Login',
@@ -86,11 +85,6 @@ export default {
     ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
     //登录
     onSubmit () {
-      if (this.form.rememberMe){
-        Cookie.set("rememberMe",this.form.rememberMe)
-      }else {
-        Cookie.remove("rememberMe")
-      }
       this.$refs["form"].validate((valid) => {
         let qs = require('qs');
         if (valid) {
