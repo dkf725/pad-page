@@ -8,67 +8,40 @@
       <div class="desc">design by 苍盐海F4</div>
     </div>
     <div class="login">
-      <a-form @submit="onSubmit" :form="form">
-        <a-tabs size="large" :tabBarStyle="{textAlign: 'center'}" style="padding: 0 2px;">
-          <a-tab-pane tab="账户密码登录" key="1">
-            <a-alert type="error" :closable="true" v-show="error" :message="error" showIcon style="margin-bottom: 24px;" />
-            <a-form-item>
-              <a-input
+      <el-form ref="form" :model="form" :rules="rules">
+          <a-alert type="error" :closable="true" v-show="error" :message="error" showIcon style="margin-bottom: 24px;" />
+          <el-form-item prop="name">
+            <el-input
                 autocomplete="autocomplete"
-                size="large"
                 placeholder="admin"
-                v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
-              >
-                <a-icon slot="prefix" type="user" />
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-input
-                size="large"
+                v-model="form.name">
+              <a-icon slot="prefix" type="user" />
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
                 placeholder="11111"
                 autocomplete="autocomplete"
                 type="password"
-                v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
-              >
-                <a-icon slot="prefix" type="lock" />
-              </a-input>
-            </a-form-item>
-          </a-tab-pane>
-          <a-tab-pane tab="手机号登录" key="2">
-            <a-form-item>
-              <a-input size="large" placeholder="mobile number" >
-                <a-icon slot="prefix" type="mobile" />
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-row :gutter="8" style="margin: 0 -4px">
-                <a-col :span="16">
-                  <a-input size="large" placeholder="captcha">
-                    <a-icon slot="prefix" type="mail" />
-                  </a-input>
-                </a-col>
-                <a-col :span="8" style="padding-left: 4px">
-                  <a-button style="width: 100%" class="captcha-button" size="large">获取验证码</a-button>
-                </a-col>
-              </a-row>
-            </a-form-item>
-          </a-tab-pane>
-        </a-tabs>
+                v-model="form.password">
+              <a-icon slot="prefix" type="lock" />
+            </el-input>
+          </el-form-item>
         <div>
-          <a-checkbox :checked="true" >自动登录</a-checkbox>
+          <el-checkbox v-model="form.rememberMe" name="remember-me">自动登录</el-checkbox>
           <a style="float: right">忘记密码</a>
         </div>
-        <a-form-item>
-          <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
-        </a-form-item>
-        <div>
-         <!-- 其他登录方式
+        <el-form-item>
+          <el-button style="width: 100%;margin-top: 24px" size="large" @click="onSubmit" type="primary">登录</el-button>
+        </el-form-item>
+        <!--其他登录方式-->
+       <!-- <div>
           <a-icon class="icon" type="alipay-circle" />
           <a-icon class="icon" type="taobao-circle" />
-          <a-icon class="icon" type="weibo-circle" />-->
+          <a-icon class="icon" type="weibo-circle" />
           <router-link style="float: right" to="/dashboard/workplace" >注册账户</router-link>
-        </div>
-      </a-form>
+        </div>-->
+      </el-form>
     </div>
   </common-layout>
 </template>
@@ -88,7 +61,19 @@ export default {
     return {
       logging: false,
       error: '',
-      form: this.$form.createForm(this)
+      form: {
+        rememberMe:false
+      },
+      rules: {//表单校验
+        name: [
+          { required: true, message: "用户名称不能为空", trigger: "blur" },
+          { min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: "用户密码不能为空", trigger: "blur" },
+          { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -99,14 +84,11 @@ export default {
   methods: {
     ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
     //登录
-    onSubmit (e) {
-      e.preventDefault()
-      this.form.validateFields((err) => {
-        if (!err) {
-          this.logging = true
-          const name = this.form.getFieldValue('name')
-          const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin)
+    onSubmit () {
+      this.$refs["form"].validate((valid) => {
+        let qs = require('qs');
+        if (valid) {
+          login(qs.stringify(this.form)).then(this.afterLogin)
         }
       })
     },

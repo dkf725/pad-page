@@ -7,11 +7,8 @@ import {request, METHOD, removeAuthorization} from '@/utils/request'
  * @param password 账户密码
  * @returns {Promise<AxiosResponse<T>>}
  */
-export async function login(name, password) {
-  return request(LOGIN, METHOD.POST, {
-    name: name,
-    password: password
-  })
+export async function login(params) {
+  return request(LOGIN, METHOD.POST, params)
 }
 
 export async function getRoutesConfig() {
@@ -22,7 +19,7 @@ export async function getRoutesConfig() {
  * 退出登录
  */
 export function logout() {
-   request("/pad/user/logout", METHOD.GET).then(() => {
+   request("/pad/logout", METHOD.GET).then(() => {
      localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
      localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
      localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
