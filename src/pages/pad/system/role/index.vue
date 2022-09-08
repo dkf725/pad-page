@@ -135,10 +135,10 @@
         </el-form-item>
         <el-form-item prop="value">
           <span slot="label">
-            <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@me.hasRole('admin')`)" placement="top">
+            <el-tooltip content="角色值，如：'admin'" placement="top">
               <i class="el-icon-question"></i>
             </el-tooltip>
-            权限字符
+            角色值
           </span>
           <el-input v-model="form.value" placeholder="请输入角色值" />
         </el-form-item>

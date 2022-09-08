@@ -43,6 +43,10 @@ const routerMap = {
     name: '角色管理',
     component: () => import('@/pages/pad/system/role/index')
   },
+  menu: {
+    name: '菜单管理',
+    component: () => import('@/pages/pad/system/menu/index')
+  },
   form: {
     name: '表单页',
     icon: 'form',
