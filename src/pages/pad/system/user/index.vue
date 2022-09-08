@@ -129,17 +129,6 @@
              @click="handleDelete(scope.row)"
              v-auth:permission="`system:user:remove`"
          >删除</el-button>
-         <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)">
-            <span class="el-dropdown-link"  style="color:#66b1ff;">
-              <i class="el-icon-d-arrow-right el-icon--right"></i>更多
-            </span>
-           <el-dropdown-menu slot="dropdown">
-             <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
-                               v-auth:permission="`system:user:resetPwd`">重置密码</el-dropdown-item>
-             <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                               v-auth:permission="`system:user:edit`">分配角色</el-dropdown-item>
-           </el-dropdown-menu>
-         </el-dropdown>
        </template>
      </el-table-column>
    </el-table>
@@ -360,19 +349,6 @@ export default {
             })
           })
     },
-    //更多操作
-    handleCommand(command,row){
-      switch (command) {
-        case "handleResetPwd":
-          this.handleResetPwd(row);
-          break;
-        case "handleAuthRole":
-          this.handleAuthRole(row);
-          break;
-        default:
-          break;
-      }
-    },
     //导入Excel
     handleImport(){
 
@@ -418,16 +394,6 @@ export default {
     //取消
     cancel(){
       this.open = false
-    },
-    //重置密码
-    // eslint-disable-next-line no-unused-vars
-    handleResetPwd(row){
-
-    },
-    //分配角色
-    // eslint-disable-next-line no-unused-vars
-    handleAuthRole(row){
-
     }
   }
 }

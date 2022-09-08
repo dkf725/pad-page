@@ -68,6 +68,11 @@ const options = {
               path: 'role',
               name: '角色管理',
               component: () => import('@/pages/pad/system/role/index'),
+            },
+            {
+              path: 'menu',
+              name: '菜单管理',
+              component: () => import('@/pages/pad/system/menu/index'),
             }
           ]
         },
