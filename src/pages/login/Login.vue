@@ -28,7 +28,7 @@
             </el-input>
           </el-form-item>
         <div>
-          <el-checkbox v-model="form.rememberMe" name="remember-me">自动登录</el-checkbox>
+          <el-checkbox v-model="form.rememberMe" name="remember-me">记住密码</el-checkbox>
           <a style="float: right">忘记密码</a>
         </div>
         <el-form-item>
