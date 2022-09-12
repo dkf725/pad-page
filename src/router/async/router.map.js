@@ -47,6 +47,14 @@ const routerMap = {
     name: '菜单管理',
     component: () => import('@/pages/pad/system/menu/index')
   },
+  detail: {
+    name: '企业详情管理',
+    component: () => import('@/pages/pad/company/company_detail')
+  },
+  material: {
+    name: '企业材料管理',
+    component: () => import('@/pages/pad/company/company_material')
+  },
   form: {
     name: '表单页',
     icon: 'form',
