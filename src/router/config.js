@@ -77,6 +77,11 @@ const options = {
           ]
         },
         {
+          path: 'bank',
+          name: '银行管理',
+          component: () => import('@/pages/pad/bank/index'),
+        },
+        {
           path: 'form',
           name: '表单页',
           meta: {
