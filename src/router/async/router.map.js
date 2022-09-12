@@ -51,6 +51,10 @@ const routerMap = {
     name: '银行管理',
     component: () => import('@/pages/pad/bank/index')
   },
+  message: {
+    name: '留言管理',
+    component: () => import('@/pages/pad/message/index')
+  },
 
   form: {
     name: '表单页',
