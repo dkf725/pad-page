@@ -6,7 +6,8 @@ export default {
     changeStatus,
     editUser,
     getUser,
-    delUser
+    delUser,
+    exportUser
 }
 
 /**
@@ -83,5 +84,17 @@ export function delUser(id){
     return request(
         `/pad/admin/${id}`,
         METHOD.DELETE
+    )
+}
+
+/**
+ * 导出用户数据
+ * @param id
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function exportUser(id){
+    return request(
+        `/pad/admin/export/${id}`,
+        METHOD.GET
     )
 }

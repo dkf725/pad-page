@@ -65,7 +65,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            v-auth:permission="`system:role:remove`"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -75,7 +74,6 @@
             icon="el-icon-download"
             size="mini"
             @click="handleExport"
-            v-auth:permission="`system:role:export`"
         >导出</el-button>
       </el-col>
     </el-row>
@@ -154,21 +152,21 @@
             >禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-       <!-- <el-form-item label="菜单权限">
-          <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
-          <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
+        <el-form-item label="菜单权限">
+          <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event)">展开/折叠</el-checkbox>
+          <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选</el-checkbox>
           <el-tree
               class="tree-border"
               :data="menuOptions"
               show-checkbox
               ref="menu"
               node-key="id"
-              :check-strictly="!form.menuCheckStrictly"
+              :check-strictly="false"
               empty-text="加载中，请稍候"
               :props="defaultProps"
           ></el-tree>
-        </el-form-item>-->
+          <!-- false为开启父子联动 check-strictly="false" -->
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -179,9 +177,10 @@
 </template>
 
 <script>
-import {getRoleList,changeStatus,getRole,delRole}
+import {getRoleList,changeStatus,getRole,delRole,addRole,editRole}
   from "@/services/pad/system/role";
-import {addUser, editUser} from "@/services/pad/system/user";
+import {getMenuList} from "@/services/pad/system/menu";
+
 export default {
   name: "index",
   data(){
@@ -196,7 +195,8 @@ export default {
       title: "",//对话框标题
       open: false,//显示对话框
       form: {
-        status:1
+        status:1,
+
       },//添加修改表单
       rules: {//表单校验
         name: [
@@ -207,6 +207,13 @@ export default {
           { required: true, message: "角色值不能为空", trigger: "blur" },
           { min: 2, max: 20, message: '角色值长度必须介于 2 和 20 之间', trigger: 'blur' }
         ]
+      },
+      menuOptions:[],// 菜单树选项
+      menuExpand: false,//展开/折叠
+      menuNodeAll: false,//全选/全不选
+      defaultProps: { //树形结构参数指定
+        children: "children",
+        label: "name"
       }
     }
   },
@@ -246,7 +253,11 @@ export default {
       //修改title
       this.title = '添加角色'
       //清空表单
-      this.$refs["form"].resetFields();
+      if (this.$refs["form"] !== undefined) {
+        this.$refs["form"].resetFields();
+      }
+      //获得菜单树形结构
+      this.getMenuTreeselect()
       //打开对话框
       this.open = true
     },
@@ -284,7 +295,6 @@ export default {
             type:'warning'
           }).then(()=>{
         delRole(roleIds).then(res=>{
-          console.log(res)
           if (res.data.code >= 0){
             this.$message.success(res.data.message)
             //刷新页面
@@ -305,7 +315,8 @@ export default {
         if (valid){
           if (this.form.id != undefined){
             //有用户id 修改操作
-            editUser(this.form).then(res=>{
+            this.form.menuIds = this.getMenuAllCheckedKeys();
+            editRole(this.form).then(res=>{
               //关闭弹框
               this.open = false
               //提示成功
@@ -315,7 +326,9 @@ export default {
             })
           }else {
             //无用户id 添加操作
-            addUser(this.form).then(res=>{
+            this.form.menuIds = this.getMenuAllCheckedKeys();
+            console.log(this.form)
+            addRole(this.form).then(res=>{
               //关闭弹框
               this.open = false
               //提示成功
@@ -330,11 +343,42 @@ export default {
     //取消
     cancel(){
       this.open = false
-    }
+    },
+    //获得菜单树结构
+    getMenuTreeselect(){
+      getMenuList().then(res=>{
+        this.menuOptions = res.data.data.perTreeList
+      })
+    },
+    // 树（展开/折叠）
+    handleCheckedTreeExpand(value) {
+      let treeList = this.menuOptions;
+      for (let i = 0; i < treeList.length; i++) {
+        this.$refs.menu.store.nodesMap[treeList[i].id].expanded = value;
+      }
+    },
+    // 树（全选/全不选）
+    handleCheckedTreeNodeAll(value) {
+      this.$refs.menu.setCheckedNodes(value ? this.menuOptions: []);
+    },
+    // 获取所有菜单节点数据
+    getMenuAllCheckedKeys() {
+      // 目前被选中的菜单节点
+      let checkedKeys = this.$refs.menu.getCheckedKeys();
+      // 半选中的菜单节点
+      let halfCheckedKeys = this.$refs.menu.getHalfCheckedKeys();
+      checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
+      return checkedKeys;
+    },
   }
 }
 </script>
 
 <style scoped>
-
+.tree-border {
+  margin-top: 5px;
+  border: 1px solid #e5e6e7;
+  background: #FFFFFF none;
+  border-radius:4px;
+}
 </style>

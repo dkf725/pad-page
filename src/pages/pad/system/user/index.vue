@@ -64,18 +64,7 @@
            size="mini"
            :disabled="multiple"
            @click="handleDelete"
-           v-auth:permission="['system:user:remove']"
        >删除</el-button>
-     </el-col>
-     <el-col :span="1.5">
-       <el-button
-           type="info"
-           plain
-           icon="el-icon-upload2"
-           size="mini"
-           @click="handleImport"
-           v-auth:permission="`system:user:import`"
-       >导入</el-button>
      </el-col>
      <el-col :span="1.5">
        <el-button
@@ -83,8 +72,8 @@
            plain
            icon="el-icon-download"
            size="mini"
+           :disabled="multiple"
            @click="handleExport"
-           v-auth:permission="`system:user:export`"
        >导出</el-button>
      </el-col>
    </el-row>
@@ -214,7 +203,7 @@
 
 <script>
 
-import {getUserList,addUser,changeStatus,editUser,getUser,delUser}
+import {getUserList,addUser,changeStatus,editUser,getUser,delUser,exportUser}
   from '@/services/pad/system/user';
 import {getRoleOptions} from "@/services/pad/system/role";
 
@@ -300,7 +289,9 @@ export default {
       //修改title
       this.title = '添加用户'
       //清空表单
-      this.$refs["form"].resetFields();
+      if (this.$refs["form"] !== undefined) {
+        this.$refs["form"].resetFields();
+      }
       //打开对话框
       this.open = true
     },
@@ -330,6 +321,7 @@ export default {
     },
     //删除按钮
     handleDelete(row){
+      console.log(this.multiple)
       const userIds = row.id || this.ids;
       this.$confirm('确定要删除编号为'+userIds+'用户吗？','系统提示',
           {
@@ -349,13 +341,26 @@ export default {
             })
           })
     },
-    //导入Excel
-    handleImport(){
-
-    },
     //导出Excel
+    //TODO
     handleExport(){
-
+      this.$confirm('是否确认导出所选用户数据项?', "系统提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(()=> {
+        exportUser(this.ids).then(res=>{
+          const url = window.URL.createObjectURL(new Blob([res.data],{type: "application/vnd.ms-excel"}))
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.setAttribute('download', "用户数据.xlsx")// 文件名
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link) // 下载完成移除元素
+          window.URL.revokeObjectURL(url) // 释放掉blob对象
+        })
+      })
     },
     //获取角色选框
     getRoleSelect(){
