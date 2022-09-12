@@ -47,6 +47,11 @@ const routerMap = {
     name: '菜单管理',
     component: () => import('@/pages/pad/system/menu/index')
   },
+  bank: {
+    name: '银行管理',
+    component: () => import('@/pages/pad/bank/index')
+  },
+
   form: {
     name: '表单页',
     icon: 'form',
