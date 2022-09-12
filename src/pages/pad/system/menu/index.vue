@@ -97,7 +97,7 @@
               icon="el-icon-plus"
               @click="handleAdd(scope.row)"
               v-auth:permission="`system:menu:add`"
-              v-if="scope.row.children!=null || scope.row.pid==0"
+              v-if="scope.row.children!=null || scope.row.pid<100"
           >新增</el-button>
           <el-button
               size="mini"
@@ -160,6 +160,26 @@
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
+          <el-col :span="15">
+            <el-form-item>
+              <span slot="label">
+                <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                菜单状态
+              </span>
+              <el-radio-group v-model="form.status">
+                <el-radio
+                    :key="1"
+                    :label="1"
+                >正常</el-radio>
+                <el-radio
+                    :key="0"
+                    :label="0"
+                >禁用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -176,7 +196,7 @@
 /*Treeselect 多选组件*/
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import {getMenuList,addMenu} from "@/services/pad/system/menu";
+import {getMenuList,addMenu,delMenu,getMenu,editMenu} from "@/services/pad/system/menu";
 
 export default {
   name: "index",
@@ -194,7 +214,8 @@ export default {
         visible: undefined
       },
       form: {
-        type:1
+        type:1,
+        status:1
       },// 表单参数
       rules: {// 表单校验
         name: [
@@ -240,9 +261,35 @@ export default {
       this.handleQuery();
     },
     //修改按钮
-    handleUpdate(){},
+    handleUpdate(row){
+      //从数据库中查询
+      getMenu(row.id).then(res=>{
+        this.form = res.data.data.permission
+      })
+      //修改title
+      this.title = '修改菜单'
+      //打开对话框
+      this.open = true
+    },
     //删除按钮
-    handleDelete(){},
+    handleDelete(row){
+      this.$confirm('确定要删除菜单'+row.name+'吗？','系统提示',
+          {
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            type:'warning'
+          }).then(()=>{
+            delMenu(row.id).then(res=>{
+              if (res.data.code >= 0){
+                this.$message.success(res.data.message)
+                //刷新页面
+                this.getList()
+              }else {
+                this.$message.error(res.data.message)
+              }
+            })
+          })
+    },
     //添加按钮
     handleAdd(row){
       //修改title
@@ -269,14 +316,14 @@ export default {
         if (valid){
           if (this.form.id != undefined){
             //有菜单id 修改操作
-           /* edit(this.form).then(res=>{
+            editMenu(this.form).then(res=>{
               //关闭弹框
               this.open = false
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
               this.getList()
-            })*/
+            })
           }else {
             //无菜单id 添加操作
             addMenu(this.form).then(res=>{
@@ -298,7 +345,7 @@ export default {
     // 转换菜单数据结构
     normalizer(node) {
       //删除空的子节点
-      if (node.children === null&&node.pid!=0){
+      if (node.children === null&&node.pid>100){
         node.isDisabled=true
       }
       if (node.children === '' || node.children === undefined || node.children === null) {

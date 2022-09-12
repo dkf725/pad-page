@@ -5,7 +5,9 @@ export default {
     getRoleList,
     changeStatus,
     getRole,
-    delRole
+    delRole,
+    addRole,
+    editRole
 }
 
 /**
@@ -64,5 +66,31 @@ export function delRole(id){
     return request(
         `/pad/role/${id}`,
         METHOD.DELETE
+    )
+}
+
+/**
+ * 添加角色
+ * @param form
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function addRole(form){
+    return request(
+        '/pad/role/add',
+        METHOD.POST,
+        form
+    )
+}
+
+/**
+ * 修改角色
+ * @param from
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function editRole(from){
+    return request(
+        `/pad/role/edit`,
+        METHOD.PUT,
+        from
     )
 }

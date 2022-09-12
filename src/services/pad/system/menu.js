@@ -2,7 +2,10 @@ import {request, METHOD} from '@/utils/request'
 
 export default {
     getMenuList,
-    addMenu
+    addMenu,
+    delMenu,
+    getMenu,
+    editMenu
 }
 
 /**
@@ -29,5 +32,42 @@ export function addMenu(form){
         '/pad/permission/add',
         METHOD.POST,
         form
+    )
+}
+
+/**
+ * 根据id删除菜单
+ * @param id
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function delMenu(id){
+    return request(
+        `/pad/permission/${id}`,
+        METHOD.DELETE
+    )
+}
+
+/**
+ * 根据id获取菜单
+ * @param id
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function getMenu(id){
+    return request(
+        `/pad/permission/${id}`,
+        METHOD.GET
+    )
+}
+
+/**
+ * 修改菜单信息
+ * @param from
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function editMenu(from){
+    return request(
+        `/pad/permission/edit`,
+        METHOD.POST,
+        from
     )
 }
