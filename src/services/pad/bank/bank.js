@@ -1,7 +1,6 @@
 import {request, METHOD} from '@/utils/request'
 
 export default {
-    getBankOptions,
     getBankList,
     getBankById,
     removeBank,
@@ -9,13 +8,6 @@ export default {
     editBank
 }
 
-/**
- * 获取银行选择列表
- * @returns {Promise<AxiosResponse<T>>}
- */
-export function getBankOptions(){
-    return request('/pad/bank/options',METHOD.GET)
-}
 
 /**
  * 银行列表分页显示

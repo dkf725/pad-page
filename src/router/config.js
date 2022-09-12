@@ -82,6 +82,11 @@ const options = {
           component: () => import('@/pages/pad/bank/index'),
         },
         {
+          path: 'message',
+          name: '留言管理',
+          component: () => import('@/pages/pad/message/index'),
+        },
+        {
           path: 'form',
           name: '表单页',
           meta: {
