@@ -47,10 +47,10 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="留言编号" prop="id" width="100" />
       <el-table-column label="企业编号" prop="cno" width="120" />
-      <el-table-column label="留言时间" prop="createTime" width="120" :formatter="dateFormat"/>
-      <el-table-column label="留言内容" prop="context" width="120" />
-      <el-table-column label="回复时间" prop="updateTime" width="120" />
-      <el-table-column label="回复内容" prop="reply" width="120" />
+      <el-table-column label="留言时间" prop="createTime" width="150" :formatter="dateFormat"/>
+      <el-table-column label="留言内容" prop="context" width="150" />
+      <el-table-column label="回复时间" prop="updateTime" width="150" />
+      <el-table-column label="回复内容" prop="reply" width="150" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope" >
           <el-button
