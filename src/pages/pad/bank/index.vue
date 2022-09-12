@@ -1,3 +1,4 @@
+
 <template>
   <a-card>
     <!--搜索框-->
@@ -111,14 +112,15 @@
         <el-form-item label="电话号码" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入电话号码" />
         </el-form-item>
-        <el-form-item label="省" prop="province">
-          <el-input v-model="form.province" placeholder="请输入省" />
-        </el-form-item>
-        <el-form-item label="市" prop="city">
-          <el-input v-model="form.city" placeholder="请输入市" />
-        </el-form-item>
-        <el-form-item label="区" prop="area">
-          <el-input v-model="form.area" placeholder="请输入区" />
+        <el-form-item label="省市区">
+        <div id="app" >
+          <el-cascader
+              size="large"
+              :options="options"
+              v-model="selectedOptions"
+              @change="handleChange">
+          </el-cascader>
+        </div>
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址" />
@@ -162,6 +164,7 @@
 <script>
 import {getBankList,getBankById,removeBank,editBank,addBank}
   from "@/services/pad/bank/bank";
+import { regionData } from 'element-china-area-data'
 export default {
   name: "index",
   data(){
@@ -175,6 +178,8 @@ export default {
       ids: [],// 选中数组
       title: "",//对话框标题
       open: false,//显示对话框
+      options: regionData,
+      selectedOptions: [],
       form: {
         isDeleted:1
       },//添加修改表单
@@ -195,6 +200,9 @@ export default {
     this.getList()
   },
   methods:{
+    handleChange (value) {
+      console.log(value)
+    },
     //查询所有角色
     getList(page=1){
       this.page = page
