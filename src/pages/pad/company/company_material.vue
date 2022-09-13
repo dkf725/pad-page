@@ -2,48 +2,54 @@
 
   <a-card>
     <template>
-      <el-descriptions class="margin-top" title="材料管理"  :data="materialList" :column="3"  border>
+      <el-descriptions class="margin-top" title="材料管理"   :column="3"  border>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
             <i class="el-icon-user"></i>
             企业名称
           </template>
-          Prepaid{{materialList.name}}
+          {{material.name}}
         </el-descriptions-item>
         <el-descriptions-item label="企业市值" prop="value">
           <template slot="label">
             <i class="el-icon-data-line"></i>
             企业市值
           </template>
-          ??????{{materialList.value}}
+          {{material.value}}
         </el-descriptions-item>
         <el-descriptions-item label="审核状态" prop="status">
           <template slot="label">
             <i class="el-icon-view"></i>
             审核状态
           </template>
-          ??????{{materialList.status}}
+            <el-tag
+                :type="material.status===0?'success':'danger'"
+            >
+              <span v-if="material.status===0">审核通过</span>
+              <span v-if="material.status===1">审核未通过</span>
+            </el-tag>
+<!--          {{material.status}}-->
         </el-descriptions-item>
         <el-descriptions-item label="法人姓名" prop="legalName">
           <template slot="label">
             <i class="el-icon-s-custom"></i>
             法人姓名
           </template>
-          ???{{materialList.legalName}}
+          {{material.legalName}}
         </el-descriptions-item>
         <el-descriptions-item label="法人电话" prop="legalPhone">
           <template slot="label">
             <i class="el-icon-phone"></i>
             法人电话
           </template>
-          Cloud Database{{materialList.legalPhone}}
+          {{material.legalPhone}}
         </el-descriptions-item>
         <el-descriptions-item label="法人身份证号" prop="legalId">
           <template slot="label">
             <i class="el-icon-postcard"></i>
             法人身份证号
           </template>
-          ???????{{materialList.legaId}}
+          {{material.legaId}}
         </el-descriptions-item>
         <el-descriptions-item label="法人身份证照片" prop="legalImg" :span="3">
           <template slot="label">
@@ -76,7 +82,7 @@
             <i class="el-icon-coin"></i>
             抵押物
           </template>
-          ??????{{materialList.collateral}}
+          {{material.collateral}}
         </el-descriptions-item>
         <el-descriptions-item label="抵押物证明" prop="collateralPhoto" :span="3">
           <template slot="label">
@@ -127,7 +133,7 @@
          </template>
           <template>
           <el-switch
-              v-model="materialList.stutas"
+              v-model="material.stutas"
               active-text="审核未通过"
               inactive-text="审核通过"
               :active-value="1"
@@ -176,7 +182,7 @@ export default {
 
     return {
       value1:false,
-      materialList: [],//材料列表
+      material: [],//材料列表
       dialogFormVisible: false,//关闭浮窗
       materialForm: {},//审核数据
 
@@ -193,7 +199,7 @@ export default {
       getMaterialList(1)
           .then(res => {
             console.log(res)
-            this.materialList = res.data.data.material
+            this.material = res.data.data.material
           })
 
     },
@@ -215,8 +221,9 @@ export default {
     },*/
     //修改状态
     StatusChange(){
-        changeStatus(this.materialList).then(res => {
+        changeStatus(this.material).then(res => {
           this.$message.success(res.data.message)
+
         })
     },
 
