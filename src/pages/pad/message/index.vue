@@ -28,7 +28,7 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            v-auth:permission="`system:message:remove`"
+            v-auth:permission="`system:message:edit`"
         >删除</el-button>
       </el-col>
     </el-row>
@@ -39,7 +39,7 @@
       <el-table-column label="企业编号" prop="cno" width="120" />
       <el-table-column label="留言时间" prop="createTime" width="150" :formatter="dateFormat"/>
       <el-table-column label="留言内容" prop="context" width="150" />
-      <el-table-column label="回复时间" prop="updateTime" width="150" />
+      <el-table-column label="回复时间" prop="updateTime" width="150" :formatter="dateFormat"/>
       <el-table-column label="回复内容" prop="reply" width="150" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope" >
@@ -55,7 +55,7 @@
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-auth:permission="`system:message:remove`"
+              v-auth:permission="`system:message:edit`"
           >删除</el-button>
         </template>
 
@@ -107,13 +107,9 @@ export default {
         reply:''
       },
       rules: {//表单校验
-        context: [
-          { required: true, message: "留言不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '留言长度必须介于 2 和 20 之间', trigger: 'blur' }
-        ],
-        value: [
-          { required: true, message: "角色值不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '角色值长度必须介于 2 和 20 之间', trigger: 'blur' }
+        reply: [
+          { required: true, message: "回复不能为空", trigger: "blur" },
+          { min: 2, max: 20, message: '回复长度必须介于 2 和 20 之间', trigger: 'blur' }
         ]
       }
     }
@@ -200,9 +196,11 @@ export default {
     submitForm(){
       this.$refs["form"].validate(valid=>{
         if (valid){
+          console.log(this.form)
           UpdateMessage(this.form).then(res=>{
             console.log(res)
             this.$message.success(res.data.message)
+            this.getList()
           })
         }
       })

@@ -172,10 +172,6 @@ export default {
         bankName: [
           { required: true, message: "银行名称不能为空", trigger: "blur" },
           { min: 2, max: 20, message: '银行名称长度必须介于 2 和 20 之间', trigger: 'blur' }
-        ],
-        value: [
-          { required: true, message: "角色值不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '角色值长度必须介于 2 和 20 之间', trigger: 'blur' }
         ]
       }
     }
