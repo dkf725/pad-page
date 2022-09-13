@@ -166,10 +166,9 @@ export default {
     //修改按钮
     handleUpdate(row){
       //从数据库中查询留言
-
-      UpdateMessage(this.form).then(res=>{
-        console.log(res)
-      })
+      this.form={
+        id:row.id
+      }
       //修改title
       this.title = '回复留言'
       //打开对话框
@@ -197,22 +196,14 @@ export default {
         })
       })
     },
-
     //提交表单
     submitForm(){
       this.$refs["form"].validate(valid=>{
         if (valid){
-          if (this.form.id != undefined){
-            //有用户id 修改操作
-            removeMessage(this.form).then(res=>{
-              //关闭弹框
-              this.open = false
-              //提示成功
-              this.$message.success(res.data.message)
-              //刷新页面
-              this.getList()
-            })
-          }
+          UpdateMessage(this.form).then(res=>{
+            console.log(res)
+            this.$message.success(res.data.message)
+          })
         }
       })
     },
