@@ -11,6 +11,13 @@ import Plugins from '@/plugins'
 import {initI18n} from '@/utils/i18n'
 import bootstrap from '@/bootstrap'
 import 'moment/locale/zh-cn'
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+let options = {
+  fullscreenEl: false,
+}
+Vue.use(preview, options)
+Vue.use(preview)
 //引入element-ui
 // eslint-disable-next-line no-unused-vars
 import ElementUI from 'element-ui'
