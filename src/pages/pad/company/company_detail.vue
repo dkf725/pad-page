@@ -1,70 +1,69 @@
 <template>
   <a-card>
     <template>
-      <el-descriptions title="信息管理"  :data="detailList" :column="3" border>
-
+      <el-descriptions title="信息管理" :column="3" border>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
             <i class="el-icon-user"></i>
             企业名称
           </template>
-         {{name}}
+         {{detail.name}}
         </el-descriptions-item>
         <el-descriptions-item label="企业类型" prop="type">
           <template slot="label">
             <i class="el-icon-guide"></i>
             企业类型
           </template>
-          {{detailList.type}}
+          {{detail.type}}
         </el-descriptions-item>
         <el-descriptions-item label="注册时间" prop="createTime">
           <template slot="label">
             <i class="el-icon-alarm-clock"></i>
             注册时间
           </template>
-          {{detailList.createTime}}
+          {{detail.createTime}}
         </el-descriptions-item>
         <el-descriptions-item label="法人姓名" prop="legalName">
           <template slot="label">
             <i class="el-icon-s-custom"></i>
             法人姓名
           </template>
-          {{legalName}}
+          {{detail.legalName}}
         </el-descriptions-item>
         <el-descriptions-item label="法人身份证号" prop="legalId">
           <template slot="label">
             <i class="el-icon-postcard"></i>
             法人身份证号
           </template>
-          {{detailList.legalId}}
+          {{detail.legalId}}
         </el-descriptions-item>
         <el-descriptions-item label="企业信誉度" prop="credit">
           <template slot="label">
             <i class="el-icon-circle-check"></i>
             企业信誉度
           </template>
-          {{detailList.credit}}
+          {{detail.credit}}
         </el-descriptions-item>
         <el-descriptions-item label="企业经营范围" prop="scope">
           <template slot="label">
             <i class="el-icon-s-operation"></i>
             企业经营范围
           </template>
-          {{detailList.scope}}
+          {{detail.scope}}
         </el-descriptions-item>
         <el-descriptions-item label="公司详细地址" prop="address">
           <template slot="label">
             <i class="el-icon-office-building"></i>
             公司详细地址
           </template>
-          {{detailList.address}}
+          {{detail.address}}
         </el-descriptions-item>
         <el-descriptions-item label="营业执照到期时间" prop="licTime">
           <template slot="label">
             <i class="el-icon-time"></i>
             营业执照到期时间
           </template>
-          {{detailList.licTime}}
+          {{detail.licTime}}
         </el-descriptions-item>
 
         <el-descriptions-item label="营业执照" prop="license">
@@ -96,7 +95,7 @@ export default {
   name: "company_detail",
   data(){
     return{
-      detailList:[],//详情列表
+      detail: {},//详情列表
     }
   },
   created() {
@@ -109,7 +108,7 @@ export default {
       getDetailList(1)
           .then(res=>{
             console.log(res)
-            this.detailList = res.data.data.detail
+            this.detail = res.data.data.detail
           })
     }
   }
