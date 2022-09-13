@@ -23,10 +23,10 @@
             审核状态
           </template>
             <el-tag
-                :type="material.status===0?'success':'danger'"
+                :type="material.status===0?'danger':'success'"
             >
-              <span v-if="material.status===0">审核通过</span>
-              <span v-if="material.status===1">审核未通过</span>
+              <span v-if="material.status===0">审核未通过</span>
+              <span v-if="material.status===1">审核通过</span>
             </el-tag>
 <!--          {{material.status}}-->
         </el-descriptions-item>
@@ -133,12 +133,12 @@
          </template>
           <template>
           <el-switch
-              v-model="material.stutas"
-              active-text="审核未通过"
-              inactive-text="审核通过"
+              v-model="material.status"
+              active-text="审核通过"
+              inactive-text="审核未通过"
               :active-value="1"
               :inactive-value="0"
-              @click="StatusChange()"
+              @change="StatusChange()"
           >
           </el-switch> </template>
         </el-descriptions-item>
@@ -223,6 +223,7 @@ export default {
     StatusChange(){
         changeStatus(this.material).then(res => {
           this.$message.success(res.data.message)
+          this. getCompanyMaterial()
 
         })
     },
