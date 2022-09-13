@@ -22,16 +22,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-            v-auth:permission="`system:message:add`"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
             type="danger"
             plain
             icon="el-icon-delete"
@@ -56,11 +46,19 @@
           <el-button
               size="mini"
               type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-auth:permission="`system:message:update`"
+          >回复</el-button>
+          <el-button
+              size="mini"
+              type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-auth:permission="`system:message:remove`"
           >删除</el-button>
         </template>
+
       </el-table-column>
     </el-table>
 
@@ -76,48 +74,9 @@
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="企业编号" prop="cNo">
-          <el-input v-model="form.cNo" placeholder="请输入企业编号" />
+        <el-form-item label="留言内容" prop="reply">
+          <el-input v-model="form.reply" placeholder="请输入回复内容" />
         </el-form-item>
-        <el-form-item label="留言时间" prop="createTime" >
-          <div class="block">
-            <el-date-picker
-                v-model="form.createTime"
-                type="date"
-                placeholder="选择日期">
-            </el-date-picker>
-          </div>
-        </el-form-item>
-        <el-form-item label="留言内容" prop="context">
-          <el-input v-model="form.context" placeholder="请输入留言内容" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.isDeleted">
-            <el-radio
-                :key="1"
-                :label="1"
-            >正常</el-radio>
-            <el-radio
-                :key="0"
-                :label="0"
-            >禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-       <!-- <el-form-item label="菜单权限">
-          <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
-          <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
-          <el-tree
-              class="tree-border"
-              :data="menuOptions"
-              show-checkbox
-              ref="menu"
-              node-key="id"
-              :check-strictly="!form.menuCheckStrictly"
-              empty-text="加载中，请稍候"
-              :props="defaultProps"
-          ></el-tree>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -128,7 +87,7 @@
 </template>
 
 <script>
-import {getMessageList,removeMessage,addMessage}
+import {getMessageList,removeMessage,UpdateMessage}
   from "@/services/pad/message/message";
 export default {
   name: "index",
@@ -144,7 +103,8 @@ export default {
       title: "",//对话框标题
       open: false,//显示对话框
       form: {
-        isDeleted:1
+        isDeleted:1,
+        reply:''
       },
       rules: {//表单校验
         context: [
@@ -203,17 +163,19 @@ export default {
       console.log(this.ids)
       console.log(this.multiple)
     },
-    //新增按钮
-    handleAdd(){
+    //修改按钮
+    handleUpdate(row){
+      //从数据库中查询留言
+
+      UpdateMessage(this.form).then(res=>{
+        console.log(res)
+      })
       //修改title
-      this.title = '添加留言'
-      //清空表单
-      if (this.$refs["form"] !== undefined) {
-        this.$refs["form"].resetFields();
-      }
+      this.title = '回复留言'
       //打开对话框
       this.open = true
     },
+
     //删除按钮
     handleDelete(row){
       const id = row.id || this.ids;
@@ -243,16 +205,6 @@ export default {
           if (this.form.id != undefined){
             //有用户id 修改操作
             removeMessage(this.form).then(res=>{
-              //关闭弹框
-              this.open = false
-              //提示成功
-              this.$message.success(res.data.message)
-              //刷新页面
-              this.getList()
-            })
-          }else {
-            //无用户id 添加操作
-            addMessage(this.form).then(res=>{
               //关闭弹框
               this.open = false
               //提示成功
