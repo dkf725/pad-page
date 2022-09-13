@@ -19,8 +19,7 @@ export function getMaterialList(cNo){
 /**
  * 修改状态
  * @param row
- * @returns {Promise<AxiosResponse<T>>}
- */
+ * @returns */
 export function changeStatus(row){
     return request(
         `/pad/company-material/update`,

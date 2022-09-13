@@ -77,6 +77,14 @@ const options = {
           ]
         },
         {
+          path: 'bank',
+          name: '银行管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: () => import('@/pages/pad/bank/index'),
+        },
+        {
           path: 'company',
           name: '信息管理',
           meta: {
@@ -95,11 +103,6 @@ const options = {
               component: () => import('@/pages/pad/company/company_material'),
             }
           ]
-        },
-        {
-          path: 'message',
-          name: '留言管理',
-          component: () => import('@/pages/pad/message/index'),
         },
         {
           path: 'form',

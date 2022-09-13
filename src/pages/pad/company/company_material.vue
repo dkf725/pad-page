@@ -2,7 +2,7 @@
 
   <a-card>
     <template>
-      <el-descriptions class="margin-top" title="材料管理"  :data="materialList" :column="3" :size="size" border>
+      <el-descriptions class="margin-top" title="材料管理"  :data="materialList" :column="3"  border>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
             <i class="el-icon-user"></i>
@@ -121,18 +121,20 @@
         </el-descriptions-item>
 
         <el-descriptions-item label="审核操作" prop="status">
-          <template slot="label">
+         <template slot="label">
             <i class="el-icon-open"></i>
             审核操作
-          </template>
+         </template>
+          <template>
           <el-switch
-              v-model="materialList.status"
+              v-model="materialList.stutas"
               active-text="审核未通过"
               inactive-text="审核通过"
               :active-value="1"
               :inactive-value="0"
+              @click="StatusChange()"
           >
-          </el-switch>
+          </el-switch> </template>
         </el-descriptions-item>
         <!--        <template slot-scope="scope">
                   <div>
@@ -181,19 +183,21 @@ export default {
     }
   },
   created() {
+    this. getCompanyMaterial()
   },
   methods: {
 
     //外键查询材料
     getCompanyMaterial() {
-      getMaterialList(this.cNo)
+      this.cNo=this.$route.query.cNo;//获取id
+      getMaterialList(1)
           .then(res => {
             console.log(res)
-            this.materialList = res.data.data
+            this.materialList = res.data.data.material
           })
 
     },
-    //审批按键
+    /*//审批按键
     showModal(row) {
       this.dialogFormVisible = true
       this.recordForm = row
@@ -208,10 +212,12 @@ export default {
           })
 
       this.dialogFormVisible = false
-    },
+    },*/
     //修改状态
-    handleStatus(){
-
+    StatusChange(){
+        changeStatus(this.materialList).then(res => {
+          this.$message.success(res.data.message)
+        })
     },
 
   }
