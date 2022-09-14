@@ -79,6 +79,9 @@ const options = {
         {
           path: 'bank',
           name: '银行管理',
+          meta: {
+            icon: 'setting'
+          },
           component: () => import('@/pages/pad/bank/index'),
         },
         {
@@ -90,6 +93,26 @@ const options = {
           path: 'loanInfo',
           name: '贷款信息管理',
           component: () => import('@/pages/pad/company/loanInfo'),
+        },
+        {
+          path: 'company',
+          name: '信息管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: BlankView,
+          children: [
+            {
+              path: 'detail',
+              name: '详细信息管理',
+              component: () => import('@/pages/pad/company/company_detail'),
+            },
+            {
+              path: 'material',
+              name: '材料管理',
+              component: () => import('@/pages/pad/company/company_material'),
+            }
+          ]
         },
         {
           path: 'form',
