@@ -105,6 +105,14 @@ const options = {
           ]
         },
         {
+          path: 'message',
+          name: '留言管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: () => import('@/pages/pad/message/index'),
+        },
+        {
           path: 'form',
           name: '表单页',
           meta: {

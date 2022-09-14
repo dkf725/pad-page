@@ -91,7 +91,8 @@
         :total="total"
         :current-page="page"
         :page-size="limit"
-        @pagination="getList"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
     />
 
     <!-- 添加或修改角色配置对话框 -->
@@ -155,7 +156,7 @@ export default {
   data(){
     return{
       page:1,//当前页
-      limit:10,//每页记录数
+      limit:3,//每页记录数
       total:0,//总记录数
       queryParams:{},//条件查询对象
       bankList:[],//银行列表
@@ -178,16 +179,15 @@ export default {
   },
   created() {
     //初始化角色列表
-    this.getList()
+    this.getList(this.page,this.limit)
   },
   methods:{
     handleChange (value) {
       console.log(value)
     },
     //查询所有角色
-    getList(page=1){
-      this.page = page
-      getBankList(this.page,this.limit,this.queryParams)
+    getList(page,limit){
+      getBankList(page,limit,this.queryParams)
           .then(res=>{
             console.log(res)
             this.bankList = res.data.data.bankList
@@ -196,7 +196,7 @@ export default {
     },
     //搜索按钮
     handleQuery(){
-      this.getList();
+      this.getList(this.page,this.limit)
     },
     //重置按钮
     resetQuery(){
@@ -207,8 +207,6 @@ export default {
     handleSelectionChange(selection){
       this.ids = selection.map(item => item.bankNo);
       this.multiple = !selection.length;
-      console.log(this.ids)
-      console.log(this.multiple)
     },
     //新增按钮
     handleAdd(){
@@ -247,7 +245,8 @@ export default {
           if (res.data.code >= 0){
             this.$message.success(res.data.message)
             //刷新页面
-            this.getList()
+            this.getList(this.page,this.limit
+            )
           }else {
             this.$message.error(res.data.message)
           }
@@ -270,7 +269,7 @@ export default {
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
-              this.getList()
+              this.getList(this.page,this.limit)
             })
           }else {
             //无用户id 添加操作
@@ -280,7 +279,7 @@ export default {
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
-              this.getList()
+              this.getList(this.page,this.limit)
             })
           }
         }
@@ -289,6 +288,14 @@ export default {
     //取消
     cancel(){
       this.open = false
+    },
+    //每页条数改变时
+    handleSizeChange(size){
+      this.getList(this.page,size)
+    },
+    //当前页数改变时
+    handleCurrentChange(page){
+      this.getList(page,this.limit)
     }
   }
 }
