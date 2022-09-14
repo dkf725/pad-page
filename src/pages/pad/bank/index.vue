@@ -137,21 +137,6 @@
             >禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-       <!-- <el-form-item label="菜单权限">
-          <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
-          <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
-          <el-tree
-              class="tree-border"
-              :data="menuOptions"
-              show-checkbox
-              ref="menu"
-              node-key="id"
-              :check-strictly="!form.menuCheckStrictly"
-              empty-text="加载中，请稍候"
-              :props="defaultProps"
-          ></el-tree>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -187,10 +172,6 @@ export default {
         bankName: [
           { required: true, message: "银行名称不能为空", trigger: "blur" },
           { min: 2, max: 20, message: '银行名称长度必须介于 2 和 20 之间', trigger: 'blur' }
-        ],
-        value: [
-          { required: true, message: "角色值不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '角色值长度必须介于 2 和 20 之间', trigger: 'blur' }
         ]
       }
     }

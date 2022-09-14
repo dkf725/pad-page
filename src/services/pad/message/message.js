@@ -3,7 +3,7 @@ import {request, METHOD} from '@/utils/request'
 export default {
     getMessageList,
     removeMessage,
-    addMessage
+    UpdateMessage
 }
 
 /**
@@ -20,17 +20,17 @@ export function getMessageList(current,limit,queryParams){
         queryParams)
 }
 
-export function addMessage(form){
-    return request(
-        `/pad/message/add`,
-        METHOD.POST,
-        form
-    )
-}
-
 export function removeMessage(id){
     return request(
         `/pad/message/${id}`,
         METHOD.DELETE
+    )
+}
+
+export function UpdateMessage(form){
+    return request(
+        `/pad/message/update`,
+        METHOD.PUT,
+        form
     )
 }
