@@ -183,6 +183,7 @@ export default {
   methods:{
     handleChange (value) {
       console.log(value)
+      console.log(this.selectedOptions)
     },
     //查询所有角色
     getList(page=1){
