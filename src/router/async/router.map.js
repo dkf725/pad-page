@@ -51,6 +51,14 @@ const routerMap = {
     name: '银行管理',
     component: () => import('@/pages/pad/bank/index')
   },
+  companyInfo: {
+    name: '企业用户基本信息管理',
+    component: () => import('@/pages/pad/company/companyInfo')
+  },
+  loanInfo: {
+    name: '贷款信息管理',
+    component: () => import('@/pages/pad/company/loanInfo')
+  },
 
   form: {
     name: '表单页',

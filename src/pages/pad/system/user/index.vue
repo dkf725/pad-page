@@ -127,7 +127,7 @@
        :total="total"
        :current-page="page"
        :page-size="limit"
-       @pagination="getList"
+       @current-change="handlePageChange"
    />
 
    <!-- 添加或修改用户配置对话框 -->
@@ -260,6 +260,10 @@ export default {
     this.getRoleSelect()
   },
   methods:{
+    handlePageChange(page){
+      console.log(page)
+      this.getList(page)
+    },
     //查询所有用户
     getList(page=1){
       this.page = page
