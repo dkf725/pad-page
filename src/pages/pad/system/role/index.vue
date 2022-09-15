@@ -122,7 +122,8 @@
         :total="total"
         :current-page="page"
         :page-size="limit"
-        @pagination="getList"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
     />
 
     <!-- 添加或修改角色配置对话框 -->
@@ -219,13 +220,12 @@ export default {
   },
   created() {
     //初始化角色列表
-    this.getList()
+    this.getList(this.page,this.limit)
   },
   methods:{
     //查询所有角色
-    getList(page=1){
-      this.page = page
-      getRoleList(this.page,this.limit,this.queryParams)
+    getList(page,limit){
+      getRoleList(page,limit,this.queryParams)
           .then(res=>{
             console.log(res)
             this.roleList = res.data.data.roleList
@@ -234,7 +234,7 @@ export default {
     },
     //搜索按钮
     handleQuery(){
-      this.getList();
+      this.getList(this.page,this.limit)
     },
     //重置按钮
     resetQuery(){
@@ -298,7 +298,7 @@ export default {
           if (res.data.code >= 0){
             this.$message.success(res.data.message)
             //刷新页面
-            this.getList()
+            this.getList(this.page,this.limit)
           }else {
             this.$message.error(res.data.message)
           }
@@ -322,7 +322,7 @@ export default {
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
-              this.getList()
+              this.getList(this.page,this.limit)
             })
           }else {
             //无用户id 添加操作
@@ -334,7 +334,7 @@ export default {
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
-              this.getList()
+              this.getList(this.page,this.limit)
             })
           }
         }
@@ -370,6 +370,14 @@ export default {
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
+    //每页条数改变时
+    handleSizeChange(size){
+      this.getList(this.page,size)
+    },
+    //当前页数改变时
+    handleCurrentChange(page){
+      this.getList(page,this.limit)
+    }
   }
 }
 </script>
