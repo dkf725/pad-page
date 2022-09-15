@@ -49,6 +49,7 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-auth:permission="`system:message:update`"
+              v-if="scope.row.reply==''"
           >回复</el-button>
           <el-button
               size="mini"
@@ -196,12 +197,11 @@ export default {
     submitForm(){
       this.$refs["form"].validate(valid=>{
         if (valid){
-          console.log(this.form)
           UpdateMessage(this.form).then(res=>{
-            console.log(res)
             this.$message.success(res.data.message)
             this.getList(this.page,this.limit)
           })
+          this.open = false
         }
       })
     },
