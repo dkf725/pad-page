@@ -72,15 +72,21 @@
 
     <el-table :data="loanInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="贷款编号" prop="id" width="100" />
-      <el-table-column label="企业名称" prop="name" width="120" />
-      <el-table-column label="银行名称" prop="bankName" width="120" />
-      <el-table-column label="收款账户" prop="bankNumber" width="120" />
-      <el-table-column label="开户行" prop="bankType" width="120" />
-      <el-table-column label="贷款金额" prop="amount" width="120" />
-      <el-table-column label="贷款用途" prop="purpose" width="120" />
-      <el-table-column label="借款期限" prop="period" width="120" />
-      <el-table-column label="认证状态" prop="status" width="120" />
+      <el-table-column label="贷款编号" prop="id" width="100" align="center"/>
+      <el-table-column label="企业名称" prop="name" width="120" align="center"/>
+      <el-table-column label="银行名称" prop="bankName" width="120" align="center"/>
+      <el-table-column label="收款账户" prop="bankNumber" width="120" align="center"/>
+      <el-table-column label="开户行" prop="bankType" width="120" align="center"/>
+      <el-table-column label="贷款金额" prop="amount" width="120" align="center"/>
+      <el-table-column label="贷款用途" prop="purpose" width="120" align="center"/>
+      <el-table-column label="借款期限" prop="period" width="120" :formatter="dateFormat" align="center"/>
+      <el-table-column label="认证状态" prop="status" width="120" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="(scope.row.status == '0' ? 'info' : (scope.row.status == '1' ? 'success' :'danger'))" size="mini">
+            {{ scope.row.status == '0' ? '未审核' : (scope.row.status == '1' ? '审核通过' :'审核失败') }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -107,7 +113,8 @@
         :total="total"
         :current-page="page"
         :page-size="limit"
-        @pagination="getList"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
     />
 
     <!-- 添加或修改贷款信息对话框 -->
@@ -138,7 +145,19 @@
           <el-input v-model="form.period" placeholder="请选择借款期限" />
         </el-form-item>
         <el-form-item label="还款方式" prop="returnMethod">
-          <el-input v-model="form.returnMethod" placeholder="请选择还款方式" />
+          <el-select v-model="form.returnMethod" placeholder="请选择还款方式">
+            <el-option label="等额本息" value="1"></el-option>
+            <el-option label="等额本金" value="2"></el-option>
+            <el-option label="每月还息" value="3"></el-option>
+            <el-option label="一次性还" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="认证状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择认证状态">
+            <el-option label="未审核" value="0"></el-option>
+            <el-option label="审核通过" value="1"></el-option>
+            <el-option label="审核未通过" value="-1"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.isDeleted">
@@ -170,7 +189,7 @@ export default {
   data(){
     return{
       page:1,//当前页
-      limit:3,//每页记录数
+      limit:5,//每页记录数
       total:0,//总记录数
       loanInfoList:[],  //企业用户基本信息列表
       queryParams:{},//条件查询对象
@@ -225,6 +244,28 @@ export default {
     this.getList()
   },
   methods:{
+    // 时间格式化
+    dateFormat: function(row) {
+      var t = new Date(row.createTime)// row 表示一行数据, createTime 表示要格式化的字段名称
+      if(!t){
+        return ''
+      }
+      let year = t.getFullYear()
+      let month = this.dateIfAddZero(t.getMonth()+1)
+      let day = this.dateIfAddZero(t.getDate())
+      return year + '-' + month + '-' + day
+    },
+    dateIfAddZero : function (time) {
+      return time < 10 ? '0'+ time : time
+    },
+    //每页条数改变时
+    handleSizeChange(size){
+      this.getList(this.page,size)
+    },
+    //当前页数改变时
+    handleCurrentChange(page){
+      this.getList(page,this.limit)
+    },
     //查询所有企业用户基本信息
     getList(page=1){
       this.page = page
@@ -237,7 +278,7 @@ export default {
     },
     //搜索按钮
     handleQuery(){
-      this.getList();
+      this.getList(this.page,this.limit);
     },
     //重置按钮
     resetQuery(){
@@ -290,7 +331,7 @@ export default {
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
-              this.getList()
+              this.getList(this.page,this.limit)
             })
           }else {
             //无用户id 添加操作
@@ -300,7 +341,7 @@ export default {
               //提示成功
               this.$message.success(res.data.message)
               //刷新页面
-              this.getList()
+              this.getList(this.page,this.limit)
             })
           }
         }

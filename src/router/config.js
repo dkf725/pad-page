@@ -87,11 +87,17 @@ const options = {
         {
           path: 'companyInfo',
           name: '企业用户基本信息管理',
+          meta: {
+            icon: 'setting'
+          },
           component: () => import('@/pages/pad/company/companyInfo'),
         },
         {
           path: 'loanInfo',
           name: '贷款信息管理',
+          meta: {
+            icon: 'setting'
+          },
           component: () => import('@/pages/pad/company/loanInfo'),
         },
         {
