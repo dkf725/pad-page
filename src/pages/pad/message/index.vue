@@ -68,7 +68,8 @@
         :total="total"
         :current-page="page"
         :page-size="limit"
-        @pagination="getList"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
     />
 
     <!-- 添加或修改角色配置对话框 -->
@@ -94,7 +95,7 @@ export default {
   data(){
     return{
       page:1,//当前页
-      limit:10,//每页记录数
+      limit:3,//每页记录数
       total:0,//总记录数
       queryParams:{},//条件查询对象
       messageList:[],//留言列表
@@ -116,7 +117,7 @@ export default {
   },
   created() {
     //初始化角色列表
-    this.getList()
+    this.getList(this.page,this.limit)
   },
   methods:{
     // 时间格式化
@@ -134,9 +135,8 @@ export default {
       return time < 10 ? '0'+ time : time
     },
     //查询所有留言
-    getList(page=1){
-      this.page = page
-      getMessageList(this.page,this.limit,this.queryParams)
+    getList(page,limit){
+      getMessageList(page,limit,this.queryParams)
           .then(res=>{
             console.log(res)
             this.messageList = res.data.data.messageList
@@ -145,7 +145,7 @@ export default {
     },
     //搜索按钮
     handleQuery(){
-      this.getList();
+      this.getList(this.page,this.limit);
     },
     //重置按钮
     resetQuery(){
@@ -185,7 +185,7 @@ export default {
           if (res.data.code >= 0){
             this.$message.success(res.data.message)
             //刷新页面
-            this.getList()
+            this.getList(this.page,this.limit)
           }else {
             this.$message.error(res.data.message)
           }
@@ -200,7 +200,7 @@ export default {
           UpdateMessage(this.form).then(res=>{
             console.log(res)
             this.$message.success(res.data.message)
-            this.getList()
+            this.getList(this.page,this.limit)
           })
         }
       })
@@ -208,6 +208,14 @@ export default {
     //取消
     cancel(){
       this.open = false
+    },
+    //每页条数改变时
+    handleSizeChange(size){
+      this.getList(this.page,size)
+    },
+    //当前页数改变时
+    handleCurrentChange(page){
+      this.getList(page,this.limit)
     }
   }
 }
