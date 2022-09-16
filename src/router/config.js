@@ -84,14 +84,7 @@ const options = {
           },
           component: () => import('@/pages/pad/bank/index'),
         },
-        {
-          path: 'companyInfo',
-          name: '企业用户基本信息管理',
-          meta: {
-            icon: 'setting'
-          },
-          component: () => import('@/pages/pad/company/companyInfo'),
-        },
+
         {
           path: 'loanInfo',
           name: '贷款信息管理',
@@ -104,18 +97,26 @@ const options = {
           path: 'company',
           name: '信息管理',
           meta: {
-            icon: 'setting'
+            icon: 'file-text'
           },
           component: BlankView,
           children: [
             {
+              path: 'companyInfo',
+              name: '企业用户基本信息管理',
+              component: () => import('@/pages/pad/company/companyInfo'),
+            },
+            {
               path: 'detail/:id',
               name: '详细信息管理',
+              hidden: true,
               component: () => import('@/pages/pad/company/company_detail'),
             },
             {
-              path: 'material',
+              path: 'material/:id',
               name: '材料管理',
+              hidden: true,
+
               component: () => import('@/pages/pad/company/company_material'),
             }
           ]
