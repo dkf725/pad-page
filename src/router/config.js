@@ -109,7 +109,7 @@ const options = {
           component: BlankView,
           children: [
             {
-              path: 'detail',
+              path: 'detail/:id',
               name: '详细信息管理',
               component: () => import('@/pages/pad/company/company_detail'),
             },

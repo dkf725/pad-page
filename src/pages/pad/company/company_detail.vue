@@ -95,17 +95,18 @@ export default {
   name: "company_detail",
   data(){
     return{
+      id:'',
       detail: {},//详情列表
     }
   },
   created() {
+    this.id = this.$route.params.id
     this.getCompanyDetailList()
   },
   methods:{
     //外键查询到信息
     getCompanyDetailList(){
-      this.cNo=this.$route.query.cNo;//获取id
-      getDetailList(1)
+      getDetailList(this.id)
           .then(res=>{
             console.log(res)
             this.detail = res.data.data.detail
