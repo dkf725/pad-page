@@ -63,7 +63,10 @@ const routerMap = {
     name: '贷款信息管理',
     component: () => import('@/pages/pad/company/loanInfo')
   },
-
+  detail:{
+    name: '详细信息管理',
+    component: () => import('@/pages/pad/company/company_detail'),
+  },
   form: {
     name: '表单页',
     icon: 'form',
