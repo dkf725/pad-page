@@ -226,6 +226,11 @@ export default {
     this.getList(this.page,this.limit)
   },
   methods:{
+    //转跳到详情页
+    detail(row){
+     /* this.$router.push({name:'/company/detail',query: {id:row.id}})*/
+      this.$router.push('/company/detail/'+row.cno)
+    },
     //每页条数改变时
     handleSizeChange(size){
       this.getList(this.page,size)
