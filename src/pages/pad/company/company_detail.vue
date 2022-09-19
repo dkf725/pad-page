@@ -14,7 +14,9 @@
             <i class="el-icon-guide"></i>
             企业类型
           </template>
-          {{detail.type}}
+          <span v-if="detail.type===0">个人独资</span>
+          <span v-if="detail.type===1">合伙企业</span>
+          <span v-if="detail.type===2">有限责任公司</span>
         </el-descriptions-item>
         <el-descriptions-item label="注册时间" prop="createTime">
           <template slot="label">
@@ -95,17 +97,18 @@ export default {
   name: "company_detail",
   data(){
     return{
+      id:'',
       detail: {},//详情列表
     }
   },
   created() {
+    this.id = this.$route.params.id
     this.getCompanyDetailList()
   },
   methods:{
     //外键查询到信息
     getCompanyDetailList(){
-      this.cNo=this.$route.query.cNo;//获取id
-      getDetailList(1)
+      getDetailList(this.id)
           .then(res=>{
             console.log(res)
             this.detail = res.data.data.detail

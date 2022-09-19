@@ -113,6 +113,12 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
+              @click="material(scope.row)"
+          >材料审核</el-button>
+          <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-auth:permission="`company:info:edit`"
           >修改</el-button>
@@ -226,6 +232,15 @@ export default {
     this.getList(this.page,this.limit)
   },
   methods:{
+    //转跳到详情页
+    detail(row){
+     /* this.$router.push({name:'/company/detail',query: {id:row.id}})*/
+      this.$router.push('/company/detail/'+row.cno)
+    },//转跳到详情页
+    material(row){
+      this.$router.push('/company/material/'+row.cno)
+    },
+
     //每页条数改变时
     handleSizeChange(size){
       this.getList(this.page,size)

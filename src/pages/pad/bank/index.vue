@@ -61,9 +61,21 @@
       <el-table-column label="逾期利率" prop="overdueRate" width="120" />
       <el-table-column label="产品说明" prop="description" width="120" />
       <el-table-column label="银行电话" prop="phone" width="120" />
-      <el-table-column label="省" prop="province" width="120" />
-      <el-table-column label="市" prop="city" width="120" />
-      <el-table-column label="区" prop="area" width="120" />
+      <el-table-column label="省" prop="province" width="120">
+        <template slot-scope="scope">
+          <span>{{convertAddress(scope.row.province)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="市" prop="city" width="120" >
+        <template slot-scope="scope">
+          <span>{{convertAddress(scope.row.city)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="区" prop="area" width="120" >
+        <template slot-scope="scope">
+          <span>{{convertAddress(scope.row.area)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="银行详细地址" prop="address" width="120" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope" v-if="scope.row.id != 1">
@@ -148,9 +160,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import {getBankList,getBankById,removeBank,editBank,addBank}
   from "@/services/pad/bank/bank";
-import { regionData } from 'element-china-area-data'
+import { regionData,CodeToText} from 'element-china-area-data'
 export default {
   name: "index",
   data(){
@@ -182,8 +195,19 @@ export default {
     this.getList(this.page,this.limit)
   },
   methods:{
+    //区域码转换为汉字
+    convertAddress(value){
+      return CodeToText[value]
+    },
+    //地址联动
     handleChange (value) {
-      console.log(value)
+      //将地址的值存入数据库
+      let province = value[0]
+      let city = value[1]
+      let area = value[2]
+      Vue.set(this.form,"province",province)
+      Vue.set(this.form,"city",city)
+      Vue.set(this.form,"area",area)
     },
     //查询所有角色
     getList(page,limit){
@@ -225,8 +249,11 @@ export default {
       //从数据库中查询银行
       getBankById(row.bankNo).then(res=>{
         this.form = res.data.data.bank
+        let province = this.form.province
+        let city = this.form.city
+        let area = this.form.area
+        this.selectedOptions=[province,city,area]
       })
-      //修改title
       this.title = '修改银行信息'
       //打开对话框
       this.open = true
