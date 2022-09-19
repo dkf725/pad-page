@@ -90,18 +90,18 @@
 
     <el-table :data="companyInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="企业编号" prop="cno" width="120" align="center"/>
+      <el-table-column label="企业编号" prop="cno" width="150" align="center"/>
       <el-table-column label="企业名称" prop="name" width="120" align="center"/>
       <el-table-column label="企业邮箱" prop="email" width="120" align="center"/>
       <el-table-column label="企业电话" prop="phone" width="120" align="center"/>
       <el-table-column label="认证状态" prop="authStatus" width="120" align="center">
-        <template slot-scope="scope">
+        <template slot-scope="scope" >
           <el-tag :type="(scope.row.authStatus == '0' ? 'info' : (scope.row.authStatus == '2' ? 'success' :'danger'))" size="mini">
             {{ scope.row.authStatus == '0' ? '未审核' : (scope.row.authStatus == '2' ? '审核通过' :'审核失败') }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" width="200" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -333,7 +333,7 @@ export default {
           if (res.data.code >= 0){
             this.$message.success(res.data.message)
             //刷新页面
-            this.getList()
+            this.getList(this.page,this.limit)
           }else {
             this.$message.error(res.data.message)
           }

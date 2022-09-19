@@ -129,6 +129,14 @@ const options = {
           component: () => import('@/pages/pad/message/index'),
         },
         {
+          path: 'statistics',
+          name: '统计分析管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: () => import('@/pages/pad/statistics/analyze'),
+        },
+        {
           path: 'form',
           name: '表单页',
           meta: {
