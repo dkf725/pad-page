@@ -13,7 +13,9 @@
             <i class="el-icon-guide"></i>
             企业类型
           </template>
-          {{detail.type}}
+          <span v-if="detail.type===0">个人独资</span>
+          <span v-if="detail.type===1">合伙企业</span>
+          <span v-if="detail.type===2">有限责任公司</span>
         </el-descriptions-item>
         <el-descriptions-item label="注册时间" prop="createTime">
           <template slot="label">
@@ -65,18 +67,33 @@
           {{detail.licTime}}
         </el-descriptions-item>
 
-        <el-descriptions-item label="营业执照" prop="license">
+        <el-descriptions-item label="营业执照" prop="license" :span="3">
           <template slot="label">
             <i class="el-icon-tickets"></i>
             营业执照
           </template>
-          <template>
+          <template >
             <img
                 preview="2"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/license/'+detail.license"
             />
           </template>
+        </el-descriptions-item>
+
+        <el-descriptions-item label="审核操作" prop="status">
+          <template slot="label">
+            <i class="el-icon-open"></i>
+            审核操作
+          </template>
+          <template>
+            <el-switch
+                active-text="审核通过"
+                inactive-text="审核未通过"
+                :active-value="1"
+                :inactive-value="0"
+            >
+            </el-switch> </template>
         </el-descriptions-item>
       </el-descriptions>
     </a-card>

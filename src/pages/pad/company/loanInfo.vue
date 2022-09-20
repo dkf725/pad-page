@@ -139,7 +139,11 @@
           <el-input v-model="form.amount" placeholder="请输入贷款金额" />
         </el-form-item>
         <el-form-item label="贷款用途" prop="purpose">
-          <el-input v-model="form.purpose" placeholder="请输入贷款用途" />
+          <el-select v-model="form.purpose" placeholder="请选择贷款用途">
+            <el-option label="个人消费贷款" value="1"></el-option>
+            <el-option label="经营贷款" value="2"></el-option>
+            <el-option label="按揭贷款" value="3"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="借款期限" prop="period">
           <el-input v-model="form.period" placeholder="请选择借款期限" />

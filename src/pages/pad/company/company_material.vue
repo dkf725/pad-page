@@ -49,7 +49,7 @@
             <i class="el-icon-postcard"></i>
             法人身份证号
           </template>
-          {{material.legaId}}
+          {{material.legalId}}
         </el-descriptions-item>
         <el-descriptions-item label="法人身份证照片" prop="legalImg" :span="3">
           <template slot="label">
@@ -59,8 +59,8 @@
           <template>
             <img
                 preview="1"
-                :width="100"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :width="200"
+                :src="'/pad/img/legal_img/'+material.legalImg"
             />
           </template>
         </el-descriptions-item>
@@ -73,7 +73,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/credit/'+material.credit"
             />
           </template>
         </el-descriptions-item>
@@ -93,7 +93,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/collateral_photo/'+material.collateralPhoto"
             />
           </template>
         </el-descriptions-item>
@@ -106,7 +106,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/records/'+material.records"
             />
           </template>
         </el-descriptions-item>
@@ -120,7 +120,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/turnover/'+material.turnover"
             />
           </template>
 
@@ -181,22 +181,23 @@ export default {
   data() {
 
     return {
+      id:'',
       value1:false,
-      material: [],//材料列表
+      material: {},//材料列表
       dialogFormVisible: false,//关闭浮窗
       materialForm: {},//审核数据
 
     }
   },
   created() {
+    this.id = this.$route.params.id
     this. getCompanyMaterial()
   },
   methods: {
 
     //外键查询材料
     getCompanyMaterial() {
-      this.cNo=this.$route.query.cNo;//获取id
-      getMaterialList(1)
+      getMaterialList(this.id)
           .then(res => {
             console.log(res)
             this.material = res.data.data.material
