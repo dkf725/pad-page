@@ -88,25 +88,29 @@
           </template>
           <template>
             <el-switch
+                v-model="detail.authStatus"
                 active-text="审核通过"
                 inactive-text="审核未通过"
-                :active-value="1"
-                :inactive-value="0"
+                :active-value="2"
+                :inactive-value="-1"
+                @change="StatusChange()"
             >
-            </el-switch> </template>
+            </el-switch>
+          </template>
         </el-descriptions-item>
       </el-descriptions>
     </a-card>
 </template>
 
 <script>
-import {getDetailList} from "@/services/pad/company/detail";
+import {getDetailList,modifyStatus} from "@/services/pad/company/detail";
 
 export default {
   name: "company_detail",
   data(){
     return{
       id:'',
+      status:-1,
       detail: {},//详情列表
     }
   },
@@ -122,6 +126,15 @@ export default {
             console.log(res)
             this.detail = res.data.data.detail
           })
+    },
+    //审核认证信息
+    StatusChange(){
+      this.status = this.detail.authStatus
+      console.log(this.status)
+      modifyStatus(this.id,this.status)
+      .then(res=>{
+        this.$message.success(res.data.message)
+      })
     }
   }
 }

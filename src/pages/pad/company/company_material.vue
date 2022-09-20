@@ -225,7 +225,6 @@ export default {
         changeStatus(this.material).then(res => {
           this.$message.success(res.data.message)
           this. getCompanyMaterial()
-
         })
     },
 
