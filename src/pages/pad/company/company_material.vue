@@ -59,8 +59,8 @@
           <template>
             <img
                 preview="1"
-                :width="100"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :width="200"
+                :src="'/pad/img/legal_img/'+material.legalImg"
             />
           </template>
         </el-descriptions-item>
@@ -73,7 +73,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/credit/'+material.credit"
             />
           </template>
         </el-descriptions-item>
@@ -93,7 +93,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/collateral_photo/'+material.collateralPhoto"
             />
           </template>
         </el-descriptions-item>
@@ -106,7 +106,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/records/'+material.records"
             />
           </template>
         </el-descriptions-item>
@@ -120,7 +120,7 @@
             <img
                 preview="1"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/turnover/'+material.turnover"
             />
           </template>
 
