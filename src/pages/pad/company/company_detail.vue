@@ -1,6 +1,5 @@
 <template>
-  <a-card>
-    <template>
+    <a-card>
       <el-descriptions title="信息管理" :column="3" border>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
@@ -80,12 +79,7 @@
           </template>
         </el-descriptions-item>
       </el-descriptions>
-    </template>
-
-
-
-
-  </a-card>
+    </a-card>
 </template>
 
 <script>
