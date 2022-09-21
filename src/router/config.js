@@ -103,20 +103,23 @@ const options = {
           children: [
             {
               path: 'companyInfo',
-              name: '企业用户基本信息管理',
+              name: '企业用户管理',
               component: () => import('@/pages/pad/company/companyInfo'),
             },
             {
               path: 'detail/:id',
               name: '详细信息管理',
-              hidden: true,
+              meta: {
+                invisible: true,
+              },
               component: () => import('@/pages/pad/company/company_detail'),
             },
             {
               path: 'material/:id',
               name: '材料管理',
-              hidden: true,
-
+              meta: {
+                invisible: true,
+              },
               component: () => import('@/pages/pad/company/company_material'),
             }
           ]
