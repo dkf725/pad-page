@@ -23,9 +23,9 @@
             审核状态
           </template>
             <el-tag
-                :type="material.status===0?'danger':'success'"
+                :type="material.status===2?'danger':'success'"
             >
-              <span v-if="material.status===0">审核未通过</span>
+              <span v-if="material.status===2">审核未通过</span>
               <span v-if="material.status===1">审核通过</span>
             </el-tag>
 <!--          {{material.status}}-->
@@ -140,7 +140,18 @@
               :inactive-value="0"
               @change="StatusChange()"
           >
-          </el-switch> </template>
+          </el-switch>
+            <br>
+            <el-switch
+                v-model="material.isDeleted"
+                active-text="驳回"
+                inactive-text="审核未通过"
+                :active-value="0"
+                :inactive-value="1"
+                @change="StatusChange()"
+            >
+            </el-switch>
+          </template>
         </el-descriptions-item>
         <!--        <template slot-scope="scope">
                   <div>
