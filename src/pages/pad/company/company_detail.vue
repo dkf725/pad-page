@@ -158,7 +158,7 @@ export default {
           }).then(()=> {
         changeStatus(this.id).then(res => {
           this.$message.success(res.data.message)
-          this.getCompanyMaterial()
+          this.getCompanyDetailList()
         })
       })
     },
