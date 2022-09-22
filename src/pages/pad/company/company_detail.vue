@@ -81,7 +81,7 @@
           </template>
         </el-descriptions-item>
 
-        <el-descriptions-item label="审核操作" prop="status">
+        <el-descriptions-item label="审核操作" prop="status" :span="3">
           <template slot="label">
             <i class="el-icon-open"></i>
             审核操作
@@ -98,12 +98,23 @@
             </el-switch>
           </template>
         </el-descriptions-item>
+        <el-descriptions-item label="驳回操作" prop="isDeleted" >
+          <template slot="label">
+            <i class="el-icon-close"></i>
+            驳回操作
+          </template>
+          <template>
+            <el-button
+                @click="showModal()"
+            >驳回</el-button>
+          </template>
+        </el-descriptions-item>
       </el-descriptions>
     </a-card>
 </template>
 
 <script>
-import {getDetailList,modifyStatus} from "@/services/pad/company/detail";
+import {getDetailList,modifyStatus,changeStatus} from "@/services/pad/company/detail";
 
 export default {
   name: "company_detail",
@@ -135,9 +146,25 @@ export default {
       .then(res=>{
         this.$message.success(res.data.message)
       })
-    }
+    },
+
+    //审批按键
+    showModal() {
+      this.$confirm('确定要驳回审批信息吗？','系统提示',
+          {
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            type:'warning'
+          }).then(()=> {
+        changeStatus(this.id).then(res => {
+          this.$message.success(res.data.message)
+          this.getCompanyMaterial()
+        })
+      })
+    },
   }
 }
+
 </script>
 
 <style scoped>

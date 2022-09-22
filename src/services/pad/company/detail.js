@@ -25,7 +25,21 @@ export function getDetailList(cNo){
  */
 export function modifyStatus(cNo,authStatus){
     return request(
-        `/pad/company-info//modify/${cNo}/${authStatus}`,
+        `/pad/company-info/modify/${cNo}/${authStatus}`,
+        METHOD.PUT
+    )
+}
+
+
+/**
+ * 修改用户认证状态
+ * @param cNo
+ * @param authStatus
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function changeStatus(cNo){
+    return request(
+        `/pad/company-info/update/${cNo}`,
         METHOD.PUT
     )
 }

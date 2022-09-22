@@ -126,7 +126,7 @@
 
         </el-descriptions-item>
 
-        <el-descriptions-item label="审核操作" prop="status">
+        <el-descriptions-item label="审核操作" prop="status" :span="3">
          <template slot="label">
             <i class="el-icon-open"></i>
             审核操作
@@ -137,44 +137,24 @@
               active-text="审核通过"
               inactive-text="审核未通过"
               :active-value="1"
-              :inactive-value="0"
+              :inactive-value="2"
               @change="StatusChange()"
           >
           </el-switch>
-            <br>
-            <el-switch
-                v-model="material.isDeleted"
-                active-text="驳回"
-                inactive-text="未驳回"
-                :active-value="0"
-                :inactive-value="1"
-                @change="StatusChange()"
-            >
-            </el-switch>
           </template>
         </el-descriptions-item>
-        <!--        <template slot-scope="scope">
-                  <div>
-                    <a-button type="primary" @click="showModal(scope.row)" style="margin-left:200%;margin-top:20px;">审批
-                    </a-button>
-                    <a-modal title="审核信息" :visible.sync="dialogFormVisible" :closable="false">
-                      <a-form class="demo-form-inline" :inline="true" :model="materialForm">
-                        <a-form-item label="审核状态">
-                          <a-select v-model="materialForm.status">
-                            <a-select-option label="待审核" value="1">待审核</a-select-option>
-                            <a-select-option label="审核未通过" value="2">审核未通过</a-select-option>
-                            <a-select-option label="审核通过" value="3">审核通过</a-select-option>
-                            <a-select-option label="审核失败" value="4">审核失败</a-select-option>
-                          </a-select>
-                        </a-form-item>
-                      </a-form>
-                      <div slot="footer" class="dialog-footer">
-                        <a-button @click="dialogFormVisible = false">取 消</a-button>
-                        <a-button type="primary" @click="handleEdit" style="margin-left:10px;">确 定</a-button>
-                      </div>
-                    </a-modal>
-                  </div>
-                </template>-->
+
+        <el-descriptions-item label="驳回操作" prop="isDeleted" >
+          <template slot="label">
+            <i class="el-icon-close"></i>
+            驳回操作
+          </template>
+          <template>
+          <el-button
+              @click="showModal()"
+          >驳回</el-button>
+          </template>
+        </el-descriptions-item>
       </el-descriptions>
     </template>
 
@@ -184,7 +164,7 @@
 
 <script>
 
-import {getMaterialList, changeStatus} from "@/services/pad/company/material";
+import {getMaterialList, changeStatus,changeisDeleted} from "@/services/pad/company/material";
 export default {
 
 
@@ -215,22 +195,21 @@ export default {
           })
 
     },
-    /*//审批按键
-    showModal(row) {
-      this.dialogFormVisible = true
-      this.recordForm = row
+    //审批按键
+    showModal() {
+      this.$confirm('确定要驳回审批信息吗？','系统提示',
+          {
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            type:'warning'
+          }).then(()=> {
+        changeisDeleted(this.id).then(res => {
+          this.$message.success(res.data.message)
+          this.getCompanyMaterial()
+        })
+      })
     },
 
-    //审查确认按键
-    handleEdit() {
-      changeStatus(this.materialForm)
-          .then(res => {
-            console.log(res)
-            this.$message.success(res.data.message)
-          })
-
-      this.dialogFormVisible = false
-    },*/
     //修改状态
     StatusChange(){
         changeStatus(this.material).then(res => {
