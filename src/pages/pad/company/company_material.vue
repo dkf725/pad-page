@@ -145,7 +145,7 @@
             <el-switch
                 v-model="material.isDeleted"
                 active-text="驳回"
-                inactive-text="审核未通过"
+                inactive-text="未驳回"
                 :active-value="0"
                 :inactive-value="1"
                 @change="StatusChange()"
