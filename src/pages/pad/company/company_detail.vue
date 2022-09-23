@@ -57,7 +57,7 @@
             <i class="el-icon-office-building"></i>
             公司详细地址
           </template>
-          {{detail.address}}
+          {{detail.provinceName}}/{{detail.cityName}}/{{detail.areaName}}/{{detail.address}}
         </el-descriptions-item>
         <el-descriptions-item label="营业执照到期时间" prop="licTime">
           <template slot="label">
@@ -123,6 +123,7 @@ export default {
       id:'',
       status:-1,
       detail: {},//详情列表
+      address:{},//地址列表
     }
   },
   created() {
@@ -130,6 +131,7 @@ export default {
     this.getCompanyDetailList()
   },
   methods:{
+
     //外键查询到信息
     getCompanyDetailList(){
       getDetailList(this.id)
