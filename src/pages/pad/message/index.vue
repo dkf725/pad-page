@@ -39,7 +39,7 @@
       <el-table-column label="企业编号" prop="cno" width="120" />
       <el-table-column label="留言时间" prop="createTime" width="150" :formatter="dateFormat"/>
       <el-table-column label="留言内容" prop="context" width="150" />
-      <el-table-column label="回复时间" prop="updateTime" width="150" :formatter="dateFormat"/>
+      <el-table-column label="回复时间" prop="updateTime" width="150" :formatter="dateFormat2"/>
       <el-table-column label="回复内容" prop="reply" width="150" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope" >
@@ -124,6 +124,16 @@ export default {
     // 时间格式化
     dateFormat: function(row) {
       var t = new Date(row.createTime)// row 表示一行数据, createTime 表示要格式化的字段名称
+      if(!t){
+        return ''
+      }
+      let year = t.getFullYear()
+      let month = this.dateIfAddZero(t.getMonth()+1)
+      let day = this.dateIfAddZero(t.getDate())
+      return year + '-' + month + '-' + day
+    },
+    dateFormat2: function(row) {
+      var t = new Date(row.updateTime)// row 表示一行数据, createTime 表示要格式化的字段名称
       if(!t){
         return ''
       }

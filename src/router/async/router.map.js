@@ -72,6 +72,14 @@ const routerMap = {
     name: '详细信息管理',
     component: () => import('@/pages/pad/company/company_detail'),
   },
+  overdue:{
+    name: '逾期管理',
+    component: () => import('@/pages/pad/overdue/overdue'),
+  },
+  credit:{
+    name: '放款管理',
+    component: () => import('@/pages/pad/credit/credit'),
+  },
   form: {
     name: '表单页',
     icon: 'form',
