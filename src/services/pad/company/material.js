@@ -2,6 +2,8 @@ import {request, METHOD} from '@/utils/request'
 
 export default {
     getMaterialList,
+    changeStatus,
+    changeisDeleted
 }
 
 /**
@@ -25,5 +27,17 @@ export function changeStatus(row){
         `/pad/company-material/update`,
         METHOD.PUT,
         row
+    )
+}
+
+
+/**
+ * 修改逻辑删除
+ * @param row
+ * @returns */
+export function changeisDeleted(cNo){
+    return request(
+        `/pad/company-material/modify/${cNo}`,
+        METHOD.PUT,
     )
 }

@@ -1,6 +1,5 @@
 <template>
-  <a-card>
-    <template>
+    <a-card>
       <el-descriptions title="信息管理" :column="3" border>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
@@ -58,7 +57,7 @@
             <i class="el-icon-office-building"></i>
             公司详细地址
           </template>
-          {{detail.address}}
+          {{detail.provinceName}}/{{detail.cityName}}/{{detail.areaName}}/{{detail.address}}
         </el-descriptions-item>
         <el-descriptions-item label="营业执照到期时间" prop="licTime">
           <template slot="label">
@@ -68,37 +67,63 @@
           {{detail.licTime}}
         </el-descriptions-item>
 
-        <el-descriptions-item label="营业执照" prop="license">
+        <el-descriptions-item label="营业执照" prop="license" :span="3">
           <template slot="label">
             <i class="el-icon-tickets"></i>
             营业执照
           </template>
-          <template>
+          <template >
             <img
                 preview="2"
                 :width="400"
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                :src="'/pad/img/license/'+detail.license"
             />
           </template>
         </el-descriptions-item>
+
+        <el-descriptions-item label="审核操作" prop="status" :span="3">
+          <template slot="label">
+            <i class="el-icon-open"></i>
+            审核操作
+          </template>
+          <template>
+            <el-switch
+                v-model="detail.authStatus"
+                active-text="审核通过"
+                inactive-text="审核未通过"
+                :active-value="2"
+                :inactive-value="-1"
+                @change="StatusChange()"
+            >
+            </el-switch>
+          </template>
+        </el-descriptions-item>
+        <el-descriptions-item label="驳回操作" prop="isDeleted" >
+          <template slot="label">
+            <i class="el-icon-close"></i>
+            驳回操作
+          </template>
+          <template>
+            <el-button
+                @click="showModal()"
+            >驳回</el-button>
+          </template>
+        </el-descriptions-item>
       </el-descriptions>
-    </template>
-
-
-
-
-  </a-card>
+    </a-card>
 </template>
 
 <script>
-import {getDetailList} from "@/services/pad/company/detail";
+import {getDetailList,modifyStatus,changeStatus} from "@/services/pad/company/detail";
 
 export default {
   name: "company_detail",
   data(){
     return{
       id:'',
+      status:-1,
       detail: {},//详情列表
+      address:{},//地址列表
     }
   },
   created() {
@@ -106,6 +131,7 @@ export default {
     this.getCompanyDetailList()
   },
   methods:{
+
     //外键查询到信息
     getCompanyDetailList(){
       getDetailList(this.id)
@@ -113,9 +139,34 @@ export default {
             console.log(res)
             this.detail = res.data.data.detail
           })
-    }
+    },
+    //审核认证信息
+    StatusChange(){
+      this.status = this.detail.authStatus
+      console.log(this.status)
+      modifyStatus(this.id,this.status)
+      .then(res=>{
+        this.$message.success(res.data.message)
+      })
+    },
+
+    //审批按键
+    showModal() {
+      this.$confirm('确定要驳回审批信息吗？','系统提示',
+          {
+            confirmButtonText:'确定',
+            cancelButtonText:'取消',
+            type:'warning'
+          }).then(()=> {
+        changeStatus(this.id).then(res => {
+          this.$message.success(res.data.message)
+          this.getCompanyDetailList()
+        })
+      })
+    },
   }
 }
+
 </script>
 
 <style scoped>
