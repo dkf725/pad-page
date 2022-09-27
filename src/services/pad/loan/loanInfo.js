@@ -5,7 +5,8 @@ export default {
     getLoanInfoById,
     removeLoanInfo,
     editLoanInfo,
-    addLoanInfo
+    addLoanInfo,
+    modifyStatus
 }
 
 /**
@@ -23,7 +24,7 @@ export function getLoanInfoList(current,limit,queryParams){
 }
 
 /**
- * 根据企业用户id获取企业用户基本信息
+ * 按主键查询每个贷款信息
  * @param id
  * @returns {Promise<AxiosResponse<T>>}
  */
@@ -59,5 +60,19 @@ export function addLoanInfo(form){
         `/pad/loan-info/add`,
         METHOD.POST,
         form
+    )
+}
+
+/**
+ * 修改贷款审核状态
+ * @param id
+ * @param authStatus
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function modifyStatus(id,status,message,type){
+    return request(
+        `/pad/loan-info/changeStatus`,
+        METHOD.GET,
+        {id,status,message,type}
     )
 }

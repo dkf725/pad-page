@@ -3,7 +3,7 @@ import {request, METHOD} from '@/utils/request'
 export default {
     getMaterialList,
     changeStatus,
-    changeisDeleted
+    changeIsDeleted
 }
 
 /**
@@ -32,12 +32,18 @@ export function changeStatus(row){
 
 
 /**
- * 修改逻辑删除
- * @param row
- * @returns */
-export function changeisDeleted(cNo){
+ * 驳回
+ * @param cNo
+ * @param id
+ * @param status
+ * @param message
+ * @param type
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function changeIsDeleted(cNo,id,status,message,type){
     return request(
-        `/pad/company-material/modify/${cNo}`,
+        `/pad/company-material/modify`,
         METHOD.PUT,
+        {cNo,id,status,message,type}
     )
 }

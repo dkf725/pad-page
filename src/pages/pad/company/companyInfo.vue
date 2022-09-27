@@ -109,12 +109,12 @@
               icon="el-icon-edit"
               @click="detail(scope.row)"
           >查看详情</el-button>
-          <el-button
+          <!--<el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="material(scope.row)"
-          >材料审核</el-button>
+          >材料审核</el-button>-->
           <el-button
               size="mini"
               type="text"
@@ -236,10 +236,11 @@ export default {
     detail(row){
      /* this.$router.push({name:'/company/detail',query: {id:row.id}})*/
       this.$router.push('/company/detail/'+row.cno)
-    },//转跳到详情页
+    },
+    /*//转跳到详情页
     material(row){
       this.$router.push('/company/material/'+row.cno)
-    },
+    },*/
 
     //导出Excel
     handleExport(){
