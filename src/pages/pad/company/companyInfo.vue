@@ -76,7 +76,7 @@
             @click="handleDelete"
         >批量删除</el-button>
       </el-col>
-<!--      <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
             type="warning"
             plain
@@ -85,7 +85,7 @@
             :disabled="multiple"
             @click="handleExport"
         >导出</el-button>
-      </el-col>-->
+      </el-col>
     </el-row>
 
     <el-table :data="companyInfoList" @selection-change="handleSelectionChange">
@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import {getCompanyInfoById, getCompanyInfoList,editCompanyInfo,removeCompanyInfo,addCompanyInfo}
+import {getCompanyInfoById, getCompanyInfoList,editCompanyInfo,removeCompanyInfo,addCompanyInfo,exportUser}
   from "@/services/pad/company/companyInfo";
 
 export default {
@@ -242,6 +242,26 @@ export default {
       this.$router.push('/company/material/'+row.cno)
     },*/
 
+    //导出Excel
+    handleExport(){
+      this.$confirm('是否确认导出所选用户数据项?', "系统提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(()=> {
+        exportUser(this.ids).then(res=>{
+          const url = window.URL.createObjectURL(new Blob([res.data],{type: "application/vnd.ms-excel"}))
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.setAttribute('download', "企业用户基本信息.xlsx")// 文件名
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link) // 下载完成移除元素
+          window.URL.revokeObjectURL(url) // 释放掉blob对象
+        })
+      })
+    },
     //每页条数改变时
     handleSizeChange(size){
       this.getList(this.page,size)

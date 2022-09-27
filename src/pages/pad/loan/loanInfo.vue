@@ -78,7 +78,14 @@
       <el-table-column label="收款账户" prop="bankNumber" width="120" align="center"/>
       <el-table-column label="开户行" prop="bankType" width="120" align="center"/>
       <el-table-column label="贷款金额" prop="amount" width="120" align="center"/>
-      <el-table-column label="贷款用途" prop="purpose" width="120" align="center"/>
+      <el-table-column label="贷款用途" prop="purpose" width="120" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.purpose===1">个人消费贷款</span>
+          <span v-if="scope.row.purpose===2">经营贷款</span>
+          <span v-if="scope.row.purpose===3">按揭贷款</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="借款期限" prop="period" width="120" :formatter="dateFormat" align="center"/>
       <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormat" align="center"/>
       <el-table-column label="认证状态" prop="status" width="120" align="center">
         <template slot-scope="scope">
@@ -320,7 +327,7 @@ export default {
     //修改按钮
     handleUpdate(row){
       //从数据库中查询企业用户基本信息
-      getLoanInfoById(row.id).then(res=>{
+      getLoanInfoById(row.cno).then(res=>{
         console.log(res)
         this.form = res.data.data.id
       })

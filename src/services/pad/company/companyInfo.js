@@ -62,3 +62,15 @@ export function addCompanyInfo(form){
         form
     )
 }
+
+/**
+ * 导出用户数据
+ * @param id
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function exportUser(){
+    return request(
+        `/pad/company-info/export`,
+        METHOD.GET
+    )
+}

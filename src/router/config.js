@@ -156,6 +156,22 @@ const options = {
         }
         /*,
         {
+          path: 'overdue',
+          name: '逾期管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: () => import('@/pages/pad/overdue/overdue'),
+        },
+        {
+          path: 'credit',
+          name: '放款管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: () => import('@/pages/pad/credit/credit'),
+        },
+        {
           path: 'form',
           name: '表单页',
           meta: {

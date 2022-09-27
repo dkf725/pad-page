@@ -59,7 +59,7 @@
       <el-table-column label="银行名称" prop="bankName" width="120" />
       <el-table-column label="年化利率" prop="borrowYearRate" width="120" />
       <el-table-column label="逾期利率" prop="overdueRate" width="120" />
-      <el-table-column label="产品说明" prop="description" width="120" />
+      <el-table-column label="产品说明" prop="description" width="120" show-overflow-tooltip/>
       <el-table-column label="银行电话" prop="phone" width="120" />
       <el-table-column label="省" prop="province" width="120">
         <template slot-scope="scope">
