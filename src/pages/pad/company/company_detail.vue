@@ -131,7 +131,6 @@ export default {
     this.getCompanyDetailList()
   },
   methods:{
-
     //外键查询到信息
     getCompanyDetailList(){
       getDetailList(this.id)

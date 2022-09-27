@@ -8,7 +8,7 @@ module.exports = {
     warning: '#faad14',
     error: '#f5222f'
   },
-  multiPage: true,
+  multiPage: false,
   animate: {
     disabled: true,
     name: 'lightSpeed',

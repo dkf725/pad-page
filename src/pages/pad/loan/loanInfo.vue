@@ -73,13 +73,13 @@
     <el-table :data="loanInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="贷款编号" prop="id" width="100" align="center"/>
-      <el-table-column label="企业名称" prop="name" width="120" align="center"/>
-      <el-table-column label="银行名称" prop="bankName" width="120" align="center"/>
+      <el-table-column label="企业名称" prop="name" width="100" align="center"/>
+      <el-table-column label="贷款银行" prop="bankName" width="120" align="center"/>
       <el-table-column label="收款账户" prop="bankNumber" width="120" align="center"/>
       <el-table-column label="开户行" prop="bankType" width="120" align="center"/>
       <el-table-column label="贷款金额" prop="amount" width="120" align="center"/>
       <el-table-column label="贷款用途" prop="purpose" width="120" align="center"/>
-      <el-table-column label="借款期限" prop="period" width="120" :formatter="dateFormat" align="center"/>
+      <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormat" align="center"/>
       <el-table-column label="认证状态" prop="status" width="120" align="center">
         <template slot-scope="scope">
           <el-tag :type="(scope.row.status == '0' ? 'info' : (scope.row.status == '1' ? 'success' :'danger'))" size="mini">
@@ -89,6 +89,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-check"
+              @click="handleModify(scope.row)"
+              v-auth:permission="`company:loanInfo:modify`"
+          >审核</el-button>
           <el-button
               size="mini"
               type="text"
@@ -186,7 +193,7 @@
 
 <script>
 import {getLoanInfoList,removeLoanInfo,getLoanInfoById,editLoanInfo,addLoanInfo}
-  from "@/services/pad/company/loanInfo";
+  from "@/services/pad/loan/loanInfo";
 
 export default {
   name: "loanInfo",
@@ -313,7 +320,7 @@ export default {
     //修改按钮
     handleUpdate(row){
       //从数据库中查询企业用户基本信息
-      getLoanInfoById(row.cno).then(res=>{
+      getLoanInfoById(row.id).then(res=>{
         console.log(res)
         this.form = res.data.data.id
       })
@@ -376,6 +383,10 @@ export default {
           }
         })
       })
+    },
+    //转跳到审核页面
+    handleModify(row){
+      this.$router.push('/loan/detail/'+row.id)
     }
   }
 }
