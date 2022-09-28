@@ -85,7 +85,7 @@
           <span v-if="scope.row.purpose===3">按揭贷款</span>
         </template>
       </el-table-column>
-      <el-table-column label="借款期限" prop="period" width="120" :formatter="dateFormat" align="center"/>
+      <el-table-column label="借款期限" prop="period" width="120" align="center"/>
       <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormat" align="center"/>
       <el-table-column label="认证状态" prop="status" width="120" align="center">
         <template slot-scope="scope">
@@ -160,7 +160,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="借款期限" prop="period">
-          <el-input v-model="form.period" placeholder="请选择借款期限" />
+          <el-input v-model="form.period" placeholder="请填写借款期限"/>
         </el-form-item>
         <el-form-item label="还款方式" prop="returnMethod">
           <el-select v-model="form.returnMethod" placeholder="请选择还款方式">
@@ -262,9 +262,8 @@ export default {
     this.getList()
   },
   methods:{
-    // 时间格式化
     dateFormat: function(row) {
-      var t = new Date(row.createTime)// row 表示一行数据, createTime 表示要格式化的字段名称
+      var t = new Date(row.updateTime)// row 表示一行数据, createTime 表示要格式化的字段名称
       if(!t){
         return ''
       }

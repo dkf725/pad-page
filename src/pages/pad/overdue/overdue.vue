@@ -3,7 +3,7 @@
     <el-table :data="overdueList" >
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="逾期编号" prop="id" width="100" align="center"/>
-      <el-table-column label="还款编号" prop="r_id" width="120" align="center"/>
+      <el-table-column label="还款编号" prop="rid" width="120" align="center"/>
       <el-table-column label="逾期利率" prop="overdueRate" width="120" align="center"/>
       <el-table-column label="逾期金额" prop="money" width="120" align="center"/>
       <el-table-column label="逾期开始时间" prop="beginTime" width="120" align="center" :formatter="dateFormat"/>
