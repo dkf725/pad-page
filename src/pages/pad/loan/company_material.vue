@@ -1,8 +1,18 @@
 <template>
-
   <a-card>
     <template>
+      <!--步骤条-->
+      <el-steps :space="200" :active="2" process-status="wait" align-center>
+        <el-step title="贷款审批"></el-step>
+        <el-step title="材料审批"></el-step>
+        <el-step title="银行审批"></el-step>
+        <el-step title="放款"></el-step>
+      </el-steps>
+      <br/>
       <el-descriptions class="margin-top" title="材料管理"   :column="3"  border>
+        <template slot="extra">
+          <el-button type="danger" size="small"  @click="open()">驳回</el-button>
+        </template>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
             <i class="el-icon-user"></i>
@@ -22,12 +32,9 @@
             <i class="el-icon-view"></i>
             审核状态
           </template>
-            <el-tag
-                :type="material.status===2?'danger':'success'"
-            >
-              <span v-if="material.status===2">审核未通过</span>
-              <span v-if="material.status===1">审核通过</span>
-            </el-tag>
+          <el-tag :type="(material.status == '0' ? 'info' : (material.status == '1' ? 'success' :'danger'))" size="mini">
+            {{ material.status == '0' ? '未审核' : (material.status == '1' ? '审核通过' :'审核失败') }}
+          </el-tag>
 <!--          {{material.status}}-->
         </el-descriptions-item>
         <el-descriptions-item label="法人姓名" prop="legalName">
@@ -132,19 +139,19 @@
             审核操作
          </template>
           <template>
-          <el-switch
-              v-model="material.status"
-              active-text="审核通过"
-              inactive-text="审核未通过"
-              :active-value="1"
-              :inactive-value="2"
-              @change="StatusChange()"
-          >
-          </el-switch>
+            <el-switch
+                v-model="material.status"
+                active-text="审核通过"
+                inactive-text="未审核"
+                :active-value="1"
+                :inactive-value="0"
+                @change="StatusChange()"
+            >
+            </el-switch>
           </template>
         </el-descriptions-item>
 
-        <el-descriptions-item label="驳回操作" prop="isDeleted" >
+      <!--  <el-descriptions-item label="驳回操作" prop="isDeleted" >
           <template slot="label">
             <i class="el-icon-close"></i>
             驳回操作
@@ -154,25 +161,27 @@
               @click="showModal()"
           >驳回</el-button>
           </template>
-        </el-descriptions-item>
+        </el-descriptions-item>-->
       </el-descriptions>
+      <br/>
+      <el-button type="primary" size="small"  @click="pre()">上一步</el-button>
+      <el-button type="primary" size="small"  @click="next()">下一步</el-button>
     </template>
-
-
   </a-card>
 </template>
 
 <script>
 
-import {getMaterialList, changeStatus,changeisDeleted} from "@/services/pad/company/material";
+import {getMaterialList, changeStatus,changeIsDeleted} from "@/services/pad/company/material";
 export default {
-
-
   name: "company_material",
   data() {
 
     return {
+      //贷款
       id:'',
+      //企业用户编号
+      cno:'',
       value1:false,
       material: {},//材料列表
       dialogFormVisible: false,//关闭浮窗
@@ -182,42 +191,67 @@ export default {
   },
   created() {
     this.id = this.$route.params.id
-    this. getCompanyMaterial()
+    this.cno = this.$route.params.cno
+    this.getCompanyMaterial()
   },
   methods: {
-
     //外键查询材料
     getCompanyMaterial() {
-      getMaterialList(this.id)
+      console.log(this.cno)
+      getMaterialList(this.cno)
           .then(res => {
             console.log(res)
             this.material = res.data.data.material
           })
-
     },
     //审批按键
-    showModal() {
+  /*  showModal() {
       this.$confirm('确定要驳回审批信息吗？','系统提示',
           {
             confirmButtonText:'确定',
             cancelButtonText:'取消',
             type:'warning'
           }).then(()=> {
-        changeisDeleted(this.id).then(res => {
+        changeIsDeleted(this.id).then(res => {
           this.$message.success(res.data.message)
           this.getCompanyMaterial()
         })
       })
-    },
-
+    },*/
     //修改状态
     StatusChange(){
         changeStatus(this.material).then(res => {
           this.$message.success(res.data.message)
-          this. getCompanyMaterial()
+          this.getCompanyMaterial()
         })
     },
-
+    //输入审批失败理由
+    open() {
+      this.$prompt('请输入驳回理由', '系统提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+        inputErrorMessage: '驳回理由不能为空'
+      }).then(({value}) => {
+        changeIsDeleted(this.cno,this.id,-1,value,0).then(res => {
+          this.$message.success(res.data.message)
+          this.getCompanyMaterial()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
+    },
+    //下一步
+    next(){
+      /*this.$router.push('/company/material/'+this.id)*/
+    },
+    //上一步
+    pre(){
+      this.$router.push('/loan/detail/'+this.id)
+    }
   }
 
 

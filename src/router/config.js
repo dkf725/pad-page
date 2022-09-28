@@ -1,6 +1,6 @@
 import TabsView from '@/layouts/tabs/TabsView'
 import BlankView from '@/layouts/BlankView'
-import PageView from '@/layouts/PageView'
+/*import PageView from '@/layouts/PageView'*/
 
 // 路由配置
 const options = {
@@ -84,14 +84,36 @@ const options = {
           },
           component: () => import('@/pages/pad/bank/index'),
         },
-
         {
-          path: 'loanInfo',
-          name: '贷款信息管理',
+          path: 'loan',
+          name: '贷款管理',
           meta: {
-            icon: 'setting'
+            icon: 'file-text'
           },
-          component: () => import('@/pages/pad/company/loanInfo'),
+          component: BlankView,
+          children: [
+            {
+              path: 'loanInfo',
+              name: '贷款信息',
+              component: () => import('@/pages/pad/loan/loanInfo'),
+            },
+            {
+              path: 'detail/:id',
+              name: '贷款审核',
+              meta: {
+                invisible: true,
+              },
+              component: () => import('@/pages/pad/loan/loan_detail'),
+            },
+            {
+              path: 'material/:id/:cno',
+              name: '材料管理',
+              meta: {
+                invisible: true,
+              },
+              component: () => import('@/pages/pad/loan/company_material'),
+            }
+          ]
         },
         {
           path: 'company',
@@ -113,14 +135,6 @@ const options = {
                 invisible: true,
               },
               component: () => import('@/pages/pad/company/company_detail'),
-            },
-            {
-              path: 'material/:id',
-              name: '材料管理',
-              meta: {
-                invisible: true,
-              },
-              component: () => import('@/pages/pad/company/company_material'),
             }
           ]
         },
@@ -142,12 +156,13 @@ const options = {
         },
         {
           path: 'statistics',
-          name: '统计分析管理',
+          name: '统计分析',
           meta: {
             icon: 'setting'
           },
           component: () => import('@/pages/pad/statistics/analyze'),
-        },
+        }
+        /*,
         {
           path: 'overdue',
           name: '逾期管理',
@@ -389,7 +404,7 @@ const options = {
             icon: 'file-word',
             link: 'https://iczer.gitee.io/vue-antd-admin-docs/'
           }
-        }
+        }*/
       ]
     },
   ]

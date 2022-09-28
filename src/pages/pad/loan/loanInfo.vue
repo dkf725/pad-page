@@ -73,8 +73,8 @@
     <el-table :data="loanInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="贷款编号" prop="id" width="100" align="center"/>
-      <el-table-column label="企业名称" prop="name" width="120" align="center"/>
-      <el-table-column label="银行名称" prop="bankName" width="120" align="center"/>
+      <el-table-column label="企业名称" prop="name" width="100" align="center"/>
+      <el-table-column label="贷款银行" prop="bankName" width="120" align="center"/>
       <el-table-column label="收款账户" prop="bankNumber" width="120" align="center"/>
       <el-table-column label="开户行" prop="bankType" width="120" align="center"/>
       <el-table-column label="贷款金额" prop="amount" width="120" align="center"/>
@@ -85,7 +85,8 @@
           <span v-if="scope.row.purpose===3">按揭贷款</span>
         </template>
       </el-table-column>
-      <el-table-column label="借款期限" prop="period" width="120" :formatter="dateFormat" align="center"/>
+      <el-table-column label="借款期限" prop="period" width="120" align="center"/>
+      <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormat" align="center"/>
       <el-table-column label="认证状态" prop="status" width="120" align="center">
         <template slot-scope="scope">
           <el-tag :type="(scope.row.status == '0' ? 'info' : (scope.row.status == '1' ? 'success' :'danger'))" size="mini">
@@ -95,6 +96,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-check"
+              @click="handleModify(scope.row)"
+              v-auth:permission="`company:loanInfo:modify`"
+          >审核</el-button>
           <el-button
               size="mini"
               type="text"
@@ -152,7 +160,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="借款期限" prop="period">
-          <el-input v-model="form.period" placeholder="请选择借款期限" />
+          <el-input v-model="form.period" placeholder="请填写借款期限"/>
         </el-form-item>
         <el-form-item label="还款方式" prop="returnMethod">
           <el-select v-model="form.returnMethod" placeholder="请选择还款方式">
@@ -192,7 +200,7 @@
 
 <script>
 import {getLoanInfoList,removeLoanInfo,getLoanInfoById,editLoanInfo,addLoanInfo}
-  from "@/services/pad/company/loanInfo";
+  from "@/services/pad/loan/loanInfo";
 
 export default {
   name: "loanInfo",
@@ -254,9 +262,8 @@ export default {
     this.getList()
   },
   methods:{
-    // 时间格式化
     dateFormat: function(row) {
-      var t = new Date(row.createTime)// row 表示一行数据, createTime 表示要格式化的字段名称
+      var t = new Date(row.updateTime)// row 表示一行数据, createTime 表示要格式化的字段名称
       if(!t){
         return ''
       }
@@ -382,6 +389,10 @@ export default {
           }
         })
       })
+    },
+    //转跳到审核页面
+    handleModify(row){
+      this.$router.push('/loan/detail/'+row.id)
     }
   }
 }
