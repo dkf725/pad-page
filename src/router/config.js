@@ -112,6 +112,23 @@ const options = {
                 invisible: true,
               },
               component: () => import('@/pages/pad/loan/company_material'),
+            },
+            {
+              path: 'examine/:id',
+              name: '结果',
+              meta: {
+                invisible: true,
+              },
+              component: () => import('@/pages/pad/loan/examine'),
+            },{
+              path: 'credit',
+              name: '放款管理',
+              component: () => import('@/pages/pad/credit/credit'),
+            },
+            {
+              path: 'overdue',
+              name: '逾期管理',
+              component: () => import('@/pages/pad/overdue/overdue'),
             }
           ]
         },
@@ -162,23 +179,7 @@ const options = {
           },
           component: () => import('@/pages/pad/statistics/analyze'),
         }
-        /*,
-        {
-          path: 'overdue',
-          name: '逾期管理',
-          meta: {
-            icon: 'setting'
-          },
-          component: () => import('@/pages/pad/overdue/overdue'),
-        },
-        {
-          path: 'credit',
-          name: '放款管理',
-          meta: {
-            icon: 'setting'
-          },
-          component: () => import('@/pages/pad/credit/credit'),
-        },
+        /*
         {
           path: 'form',
           name: '表单页',

@@ -77,21 +77,27 @@
       <el-table-column label="贷款银行" prop="bankName" width="120" align="center"/>
       <el-table-column label="收款账户" prop="bankNumber" width="120" align="center"/>
       <el-table-column label="开户行" prop="bankType" width="120" align="center"/>
-      <el-table-column label="贷款金额" prop="amount" width="120" align="center"/>
-      <el-table-column label="贷款用途" prop="purpose" width="120" align="center">
+      <el-table-column label="贷款金额" prop="amount" width="100" align="center"/>
+      <el-table-column label="贷款用途" prop="purpose" width="100" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.purpose===1">个人消费贷款</span>
           <span v-if="scope.row.purpose===2">经营贷款</span>
           <span v-if="scope.row.purpose===3">按揭贷款</span>
         </template>
       </el-table-column>
-      <el-table-column label="借款期限" prop="period" width="120" align="center"/>
+      <el-table-column label="借款期限" prop="period" width="100" align="center"/>
       <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormat" align="center"/>
-      <el-table-column label="认证状态" prop="status" width="120" align="center">
+      <el-table-column label="审核状态" prop="status" width="120" align="center">
         <template slot-scope="scope">
-          <el-tag :type="(scope.row.status == '0' ? 'info' : (scope.row.status == '1' ? 'success' :'danger'))" size="mini">
-            {{ scope.row.status == '0' ? '未审核' : (scope.row.status == '1' ? '审核通过' :'审核失败') }}
-          </el-tag>
+          <!--<el-tag :type="(scope.row.status == '0' ? 'info' : (scope.row.status == '-1' ? 'danger' :'success'))" size="mini">
+            {{ scope.row.status == '0' ? '未审核' : (scope.row.status == '1' ? '等待银行审核' :(scope.row.status == '2' ? '审核通过' :'审核失败')) }}
+          </el-tag>-->
+          <el-tag type="info" v-if="scope.row.status == '0'">未审核</el-tag>
+          <el-tag type="primary" v-if="scope.row.status == '3'">平台材料审核</el-tag>
+          <el-tag type="primary" v-if="scope.row.status == '1'">等待银行审核</el-tag>
+          <el-tag type="primary" v-if="scope.row.status == '4'">等待银行审核</el-tag>
+          <el-tag type="success" v-if="scope.row.status == '2'">审核成功</el-tag>
+          <el-tag type="danger" v-if="scope.row.status == '-1'">审核失败</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -302,7 +308,6 @@ export default {
       }
       //打开对话框
       this.open = true
-      //console.log("999999999999999999[[["+this.form.cno)
     },
     //修改按钮
     handleUpdate(row){

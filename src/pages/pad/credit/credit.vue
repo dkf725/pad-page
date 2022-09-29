@@ -1,6 +1,5 @@
 <template>
   <a-card>
-
     <!--搜索框-->
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true"  label-width="68px">
       <el-form-item label="贷款编号" prop="lid">
