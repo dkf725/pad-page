@@ -2,7 +2,8 @@ import {request, METHOD} from '@/utils/request'
 
 
 export default {
-    getCreditList
+    getCreditList,
+    addCredit
 }
 
 /**
@@ -15,6 +16,13 @@ export default {
 export function getCreditList(current,limit,queryParams){
     return request(
         `/pad/credit/list/${current}/${limit}`,
+        METHOD.POST,
+        queryParams)
+}
+
+export function addCredit(queryParams){
+    return request(
+        `/pad/credit/add`,
         METHOD.POST,
         queryParams)
 }
