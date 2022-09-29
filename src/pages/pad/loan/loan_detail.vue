@@ -2,10 +2,11 @@
 <a-card>
   <!--步骤条-->
   <el-steps :space="200" :active="1" process-status="wait" align-center>
-    <el-step title="贷款审批"></el-step>
+    <el-step v-if="this.role=='平台管理员'" title="平台审批"></el-step>
+    <el-step v-if="this.role=='银行管理员'" title="银行审批"></el-step>
     <el-step title="材料审批"></el-step>
-    <el-step title="银行审批"></el-step>
-    <el-step title="放款"></el-step>
+    <el-step v-if="this.role=='平台管理员'" title="审批结果"></el-step>
+    <el-step v-if="this.role=='银行管理员'" title="放款"></el-step>
   </el-steps>
   <br/>
   <!--贷款详情-->
@@ -53,9 +54,15 @@
         <i class="el-icon-tickets"></i>
         审核状态
       </template>
-      <el-tag :type="(loanInfo.status == '0' ? 'info' : (loanInfo.status == '1' ? 'success' :'danger'))" size="mini">
-        {{ loanInfo.status == '0' ? '未审核' : (loanInfo.status == '1' ? '审核通过' :'审核失败') }}
-      </el-tag>
+      <!--<el-tag :type="(loanInfo.status == '0' ? 'info' : (loanInfo.status == '-1' ? 'danger' :'success'))" size="mini">
+        {{ loanInfo.status == '0' ? '未审核' : (loanInfo.status == '1' ? '等待银行审核' :(loanInfo.status == '2' ? '审核通过' :'审核失败')) }}
+      </el-tag>-->
+      <el-tag type="info" v-if="loanInfo.status == '0'">未审核</el-tag>
+      <el-tag type="primary" v-if="loanInfo.status == '3'">平台材料审核</el-tag>
+      <el-tag type="primary" v-if="loanInfo.status == '1'">等待银行审核</el-tag>
+      <el-tag type="primary" v-if="loanInfo.status == '4'">银行材料审核</el-tag>
+      <el-tag type="success" v-if="loanInfo.status == '2'">审核成功</el-tag>
+      <el-tag type="danger" v-if="loanInfo.status == '-1'">审核失败</el-tag>
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
@@ -96,7 +103,8 @@
     </el-descriptions-item>
 
     <!--操作-->
-    <el-descriptions-item label="审核操作" prop="status" :span="3">
+    <el-descriptions-item label="审核操作" prop="status" :span="3"
+      v-if="this.role=='平台管理员' && loanInfo.status!=1">
       <template slot="label">
         <i class="el-icon-open"></i>
         审核操作
@@ -106,8 +114,25 @@
             v-model="loanInfo.status"
             active-text="审核通过"
             inactive-text="未审核"
-            :active-value="1"
+            :active-value="3"
             :inactive-value="0"
+            @change="StatusChange()"
+        ></el-switch>
+      </template>
+    </el-descriptions-item>
+    <el-descriptions-item label="审核操作" prop="status" :span="3"
+                          v-if="this.role=='银行管理员'">
+      <template slot="label">
+        <i class="el-icon-open"></i>
+        审核操作
+      </template>
+      <template>
+        <el-switch
+            v-model="loanInfo.status"
+            active-text="审核通过"
+            inactive-text="未审核"
+            :active-value="4"
+            :inactive-value="1"
             @change="StatusChange()"
         >
         </el-switch>
@@ -130,14 +155,26 @@ export default {
     return{
       //贷款编号
       id:'',
-      loanInfo:{}
+      loanInfo:{},
+      role:'',
+      //（1银行,0平台）
+      type:''
     }
   },
   created() {
+    this.role = this.$store.getters["account/roles"]
     this.id = this.$route.params.id
     this.getLoanDetail()
   },
   methods:{
+    getType(){
+      if (this.role=='平台管理员'){
+        return 0
+      }
+      if (this.role=='银行管理员'){
+        return 1
+      }
+    },
     // 时间格式化
     dateFormat: function(date) {
       var t = new Date(date)// row 表示一行数据, createTime 表示要格式化的字段名称
@@ -161,7 +198,7 @@ export default {
     },
     //审批按键
     StatusChange(){
-      modifyStatus(this.id,this.loanInfo.status,null,0).then(res=>{
+      modifyStatus(this.id,this.loanInfo.status,null,this.getType()).then(res=>{
         this.$message.success(res.data.message)
         this.getLoanDetail()
       })
@@ -174,7 +211,7 @@ export default {
         inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
         inputErrorMessage: '驳回理由不能为空'
       }).then(({value}) => {
-        modifyStatus(this.id,-1,value,0).then(res=>{
+        modifyStatus(this.id,-1,value,this.getType()).then(res=>{
           this.$message.success(res.data.message)
           this.getLoanDetail()
         })
