@@ -134,7 +134,7 @@
     <!-- 添加或修改贷款信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="贷款信息编号" prop="id" v-if="title=='添加贷款信息'">
+        <el-form-item label="贷款编号" prop="id" v-if="title=='添加贷款信息'">
           <el-input v-model="form.id" placeholder="请输入企业名称" />
         </el-form-item>
         <el-form-item label="企业编号" prop="cno" v-if="title=='添加贷款信息'">
@@ -169,25 +169,6 @@
             <el-option label="每月还息" value="3"></el-option>
             <el-option label="一次性还" value="4"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="认证状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择认证状态">
-            <el-option label="未审核" value="0"></el-option>
-            <el-option label="审核通过" value="1"></el-option>
-            <el-option label="审核未通过" value="-1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.isDeleted">
-            <el-radio
-                :key="1"
-                :label="1"
-            >正常</el-radio>
-            <el-radio
-                :key="0"
-                :label="0"
-            >禁用</el-radio>
-          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -326,7 +307,7 @@ export default {
     //修改按钮
     handleUpdate(row){
       //从数据库中查询企业用户基本信息
-      getLoanInfoById(row.cno).then(res=>{
+      getLoanInfoById(row.id).then(res=>{
         console.log(res)
         this.form = res.data.data.id
       })
