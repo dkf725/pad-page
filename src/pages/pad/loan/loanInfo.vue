@@ -57,16 +57,6 @@
             @click="handleDelete"
         >批量删除</el-button>
       </el-col>
-      <!--      <el-col :span="1.5">
-              <el-button
-                  type="warning"
-                  plain
-                  icon="el-icon-download"
-                  size="mini"
-                  :disabled="multiple"
-                  @click="handleExport"
-              >导出</el-button>
-            </el-col>-->
     </el-row>
 
 
@@ -89,15 +79,13 @@
       <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormat" align="center"/>
       <el-table-column label="审核状态" prop="status" width="120" align="center">
         <template slot-scope="scope">
-          <!--<el-tag :type="(scope.row.status == '0' ? 'info' : (scope.row.status == '-1' ? 'danger' :'success'))" size="mini">
-            {{ scope.row.status == '0' ? '未审核' : (scope.row.status == '1' ? '等待银行审核' :(scope.row.status == '2' ? '审核通过' :'审核失败')) }}
-          </el-tag>-->
-          <el-tag type="info" v-if="scope.row.status == '0'">未审核</el-tag>
+          <el-tag type="info" v-if="scope.row.status == '0'">平台未审核</el-tag>
           <el-tag type="primary" v-if="scope.row.status == '3'">平台材料审核</el-tag>
           <el-tag type="primary" v-if="scope.row.status == '1'">等待银行审核</el-tag>
           <el-tag type="primary" v-if="scope.row.status == '4'">等待银行审核</el-tag>
           <el-tag type="success" v-if="scope.row.status == '2'">审核成功</el-tag>
           <el-tag type="danger" v-if="scope.row.status == '-1'">审核失败</el-tag>
+          <el-tag type="success" v-if="scope.row.status == '5'">已放款</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -108,6 +96,7 @@
               icon="el-icon-check"
               @click="handleModify(scope.row)"
               v-auth:permission="`company:loanInfo:modify`"
+              v-if="!(role=='银行管理员' && scope.row.status == '0') && scope.row.status != '-1'"
           >审核</el-button>
           <el-button
               size="mini"
@@ -193,6 +182,7 @@ export default {
   name: "loanInfo",
   data(){
     return{
+      role:'',
       page:1,//当前页
       limit:5,//每页记录数
       total:0,//总记录数
@@ -245,6 +235,7 @@ export default {
     }
   },
   created() {
+    this.role = this.$store.getters["account/roles"]
     //初始化贷款信息
     this.getList()
   },

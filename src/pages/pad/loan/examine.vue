@@ -8,7 +8,6 @@
     <el-step v-if="this.role=='平台管理员'" title="审批结果"></el-step>
     <el-step v-if="this.role=='银行管理员'" title="放款"></el-step>
   </el-steps>
-  {{this.loanInfo.status}}
   <div v-if="this.role=='平台管理员'">
     <div v-if="this.loanInfo.status==1">
       已提交至银行管理员审核，请耐心等待
@@ -119,13 +118,14 @@
     </el-descriptions>
   </div>
   <el-button type="primary" size="small"  @click="pre()">上一步</el-button>
-  <el-button type="primary" size="small" :disabled="disable" @click="put()">{{msg}}</el-button>
+  <el-button type="primary" size="small" :disabled="disable" @click="put()"
+             v-if="this.role=='银行管理员'">{{msg}}</el-button>
 </a-card>
 </template>
 
 <script>
-import {getLoanInfoById} from "@/services/pad/loan/loanInfo";
-import {addCredit} from "@/services/pad/credit/credit";
+import {getLoanInfoById, modifyStatus} from "@/services/pad/loan/loanInfo";
+import {addCredit,creditQuery} from "@/services/pad/credit/credit";
 
 export default {
   name: "examine",
@@ -146,7 +146,9 @@ export default {
     this.role = this.$store.getters["account/roles"]
     this.id = this.$route.params.id
     this.getLoanDetail()
+    this.isCredit()
   },
+  //计算属性
   computed:{
     //平台所收手续费
     service:function () {
@@ -157,6 +159,17 @@ export default {
     }
   },
   methods:{
+    //查询是否放款
+    isCredit(){
+      creditQuery(this.id).then(res=>{
+        let count = res.data.data.count
+        if (count>0){
+          //已放款
+          this.msg = '已放款';
+          this.disable = true;
+        }
+      })
+    },
     // 时间格式化
     dateFormat: function(date) {
       var t = new Date(date)// row 表示一行数据, createTime 表示要格式化的字段名称
@@ -200,7 +213,12 @@ export default {
           "service":this.service
         }
         addCredit(params).then(res=>{
+          this.msg = '已放款';
+          this.disable = true;
           this.$message.success(res.data.message)
+          //修改贷款表状态 为已放款
+          modifyStatus(this.id,5,null,1)
+          this.isCredit()
         })
       }
     }

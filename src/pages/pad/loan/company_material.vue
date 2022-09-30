@@ -12,7 +12,8 @@
       <br/>
       <el-descriptions class="margin-top" title="材料管理"   :column="3"  border>
         <template slot="extra">
-          <el-button type="danger" size="small"  @click="open()">驳回</el-button>
+          <el-button type="danger" size="small"  @click="open()"
+          v-if="material.status!=2">驳回</el-button>
         </template>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
@@ -135,7 +136,7 @@
         </el-descriptions-item>
 
         <el-descriptions-item label="审核操作" prop="status" :span="3"
-           v-if="this.role=='平台管理员' && material.status!=1">
+           v-if="this.role=='平台管理员' && material.status!=1 && material.status!=2">
          <template slot="label">
             <i class="el-icon-open"></i>
             审核操作
@@ -152,7 +153,7 @@
           </template>
         </el-descriptions-item>
         <el-descriptions-item label="审核操作" prop="status" :span="3"
-                              v-if="this.role=='银行管理员'">
+            v-if="this.role=='银行管理员' && material.status!=2">
           <template slot="label">
             <i class="el-icon-open"></i>
             审核操作
@@ -264,8 +265,6 @@ export default {
       this.$router.push('/loan/detail/'+this.id)
     }
   }
-
-
 }
 </script>
 

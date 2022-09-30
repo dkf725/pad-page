@@ -7,7 +7,8 @@ export default {
     getRole,
     delRole,
     addRole,
-    editRole
+    editRole,
+    getMenuIdsByRoleId
 }
 
 /**
@@ -92,5 +93,12 @@ export function editRole(from){
         `/pad/role/edit`,
         METHOD.PUT,
         from
+    )
+}
+
+export function getMenuIdsByRoleId(id){
+    return request(
+        `/pad/role/getMenuIds/${id}`,
+        METHOD.GET
     )
 }
