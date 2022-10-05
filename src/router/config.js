@@ -164,6 +164,14 @@ const options = {
           component: () => import('@/pages/pad/message/index'),
         },
         {
+          path: 'approvalRecord',
+          name: '审查记录管理',
+          meta: {
+            icon: 'setting'
+          },
+          component: () => import('@/pages/pad/approvalRecord/index'),
+        },
+        {
           path: 'statistics',
           name: '统计分析',
           meta: {

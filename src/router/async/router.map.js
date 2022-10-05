@@ -55,6 +55,10 @@ const routerMap = {
     name: '留言管理',
     component: () => import('@/pages/pad/message/index')
   },
+  approvalRecord: {
+    name: '审核记录管理',
+    component: () => import('@/pages/pad/approvalRecord/index')
+  },
   companyInfo: {
     name: '企业用户基本信息管理',
     component: () => import('@/pages/pad/company/companyInfo')
