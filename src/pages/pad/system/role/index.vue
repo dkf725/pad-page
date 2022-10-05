@@ -157,6 +157,7 @@
           <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event)">展开/折叠</el-checkbox>
           <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选</el-checkbox>
           <el-tree
+              :default-checked-keys="defaultList"
               class="tree-border"
               :data="menuOptions"
               show-checkbox
@@ -178,7 +179,7 @@
 </template>
 
 <script>
-import {getRoleList,changeStatus,getRole,delRole,addRole,editRole}
+import {getRoleList,changeStatus,getRole,delRole,addRole,editRole,getMenuIdsByRoleId}
   from "@/services/pad/system/role";
 import {getMenuList} from "@/services/pad/system/menu";
 
@@ -215,12 +216,15 @@ export default {
       defaultProps: { //树形结构参数指定
         children: "children",
         label: "name"
-      }
+      },
+      defaultList:[]
     }
   },
   created() {
     //初始化角色列表
     this.getList(this.page,this.limit)
+    //获得菜单树形结构
+    this.getMenuTreeselect()
   },
   methods:{
     //查询所有角色
@@ -256,8 +260,11 @@ export default {
       if (this.$refs["form"] !== undefined) {
         this.$refs["form"].resetFields();
       }
-      //获得菜单树形结构
-      this.getMenuTreeselect()
+      //清空树形菜单
+      this.$nextTick(function () {
+        //Dom更新完毕
+        this.$refs.menu.setCheckedKeys([]);
+      });
       //打开对话框
       this.open = true
     },
@@ -279,6 +286,14 @@ export default {
       //从数据库中查询角色
       getRole(row.id).then(res=>{
         this.form = res.data.data.role
+      })
+      //获取角色对应权限
+      getMenuIdsByRoleId(row.id).then(res=>{
+        let menuIds = res.data.data.menuIds
+        this.$nextTick(function () {
+          //Dom更新完毕
+          this.$refs.menu.setCheckedKeys(menuIds);
+        });
       })
       //修改title
       this.title = '修改角色'

@@ -12,7 +12,8 @@
   <!--贷款详情-->
   <el-descriptions class="margin-top" title="贷款详情" :column="3"  border>
     <template slot="extra">
-      <el-button type="danger" size="small"  @click="open()">驳回</el-button>
+      <el-button type="danger" size="small"  @click="open()"
+      v-if="loanInfo.status!=5">驳回</el-button>
     </template>
     <el-descriptions-item>
       <template slot="label">
@@ -57,12 +58,13 @@
       <!--<el-tag :type="(loanInfo.status == '0' ? 'info' : (loanInfo.status == '-1' ? 'danger' :'success'))" size="mini">
         {{ loanInfo.status == '0' ? '未审核' : (loanInfo.status == '1' ? '等待银行审核' :(loanInfo.status == '2' ? '审核通过' :'审核失败')) }}
       </el-tag>-->
-      <el-tag type="info" v-if="loanInfo.status == '0'">未审核</el-tag>
+      <el-tag type="info" v-if="loanInfo.status == '0'">平台未审核</el-tag>
       <el-tag type="primary" v-if="loanInfo.status == '3'">平台材料审核</el-tag>
       <el-tag type="primary" v-if="loanInfo.status == '1'">等待银行审核</el-tag>
       <el-tag type="primary" v-if="loanInfo.status == '4'">银行材料审核</el-tag>
       <el-tag type="success" v-if="loanInfo.status == '2'">审核成功</el-tag>
       <el-tag type="danger" v-if="loanInfo.status == '-1'">审核失败</el-tag>
+      <el-tag type="danger" v-if="loanInfo.status == '5'">已放款</el-tag>
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
@@ -104,7 +106,7 @@
 
     <!--操作-->
     <el-descriptions-item label="审核操作" prop="status" :span="3"
-      v-if="this.role=='平台管理员' && loanInfo.status!=1">
+      v-if="this.role=='平台管理员' && loanInfo.status!=1 && loanInfo.status!=2 && loanInfo.status!=5">
       <template slot="label">
         <i class="el-icon-open"></i>
         审核操作
@@ -121,7 +123,7 @@
       </template>
     </el-descriptions-item>
     <el-descriptions-item label="审核操作" prop="status" :span="3"
-                          v-if="this.role=='银行管理员'">
+       v-if="this.role=='银行管理员' && loanInfo.status!=2">
       <template slot="label">
         <i class="el-icon-open"></i>
         审核操作
@@ -148,6 +150,7 @@
 <script>
 import {getLoanInfoById,modifyStatus}
   from "@/services/pad/loan/loanInfo";
+import {changeIsDeleted} from "@/services/pad/company/material";
 
 export default {
   name: "loan_detail",
@@ -211,8 +214,12 @@ export default {
         inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
         inputErrorMessage: '驳回理由不能为空'
       }).then(({value}) => {
+        //驳回申请
         modifyStatus(this.id,-1,value,this.getType()).then(res=>{
-          this.$message.success(res.data.message)
+          //驳回材料
+          changeIsDeleted(this.loanInfo.cno,this.id,-1,value,this.getType()).then(() => {
+            this.$message.success(res.data.message)
+          })
           this.getLoanDetail()
         })
       }).catch(() => {
