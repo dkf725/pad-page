@@ -69,7 +69,7 @@
     <el-table :data="creditList" >
       <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="放款编号" prop="id" width="100" align="center"/>
-      <el-table-column label="贷款信息编号" prop="lid" width="120" align="center"/>
+      <el-table-column label="贷款编号" prop="lId" width="120" align="center"/>
       <el-table-column label="企业名称" prop="name" width="120" align="center"/>
       <el-table-column label="放款类型" prop="type" width="120" align="center">
         <template slot-scope="scope">

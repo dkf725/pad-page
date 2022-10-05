@@ -9,14 +9,14 @@
     <el-step v-if="this.role=='银行管理员'" title="放款"></el-step>
   </el-steps>
   <div v-if="this.role=='平台管理员'">
-    <div v-if="this.loanInfo.status==1">
-      已提交至银行管理员审核，请耐心等待
-    </div>
-    <div v-if="this.loanInfo.status==2">
+    <div v-if="this.loanInfo.status==5">
       银行管理员审核通过，已放款
     </div>
     <div v-if="this.loanInfo.status==-1">
       银行管理员驳回
+    </div>
+    <div v-else>
+      已提交至银行管理员审核，请耐心等待
     </div>
   </div>
   <div v-if="this.role=='银行管理员'">
