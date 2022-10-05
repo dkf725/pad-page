@@ -150,6 +150,7 @@
 <script>
 import {getLoanInfoById,modifyStatus}
   from "@/services/pad/loan/loanInfo";
+import {changeIsDeleted} from "@/services/pad/company/material";
 
 export default {
   name: "loan_detail",
@@ -213,8 +214,12 @@ export default {
         inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
         inputErrorMessage: '驳回理由不能为空'
       }).then(({value}) => {
+        //驳回申请
         modifyStatus(this.id,-1,value,this.getType()).then(res=>{
-          this.$message.success(res.data.message)
+          //驳回材料
+          changeIsDeleted(this.loanInfo.cno,this.id,-1,value,this.getType()).then(() => {
+            this.$message.success(res.data.message)
+          })
           this.getLoanDetail()
         })
       }).catch(() => {

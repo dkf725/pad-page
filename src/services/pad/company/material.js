@@ -43,7 +43,7 @@ export function changeStatus(row){
 export function changeIsDeleted(cNo,id,status,message,type){
     return request(
         `/pad/company-material/modify`,
-        METHOD.PUT,
+        METHOD.GET,
         {cNo,id,status,message,type}
     )
 }
