@@ -96,8 +96,8 @@
       <el-table-column label="企业电话" prop="phone" width="120" align="center"/>
       <el-table-column label="认证状态" prop="authStatus" width="120" align="center">
         <template slot-scope="scope" >
-          <el-tag :type="(scope.row.authStatus == '0' ? 'info' : (scope.row.authStatus == '2' ? 'success' :'danger'))" size="mini">
-            {{ scope.row.authStatus == '0' ? '未审核' : (scope.row.authStatus == '2' ? '审核通过' :'审核失败') }}
+          <el-tag :type="(scope.row.authStatus == '1' ? 'info' : (scope.row.authStatus == '2' ? 'success' :(scope.row.authStatus == '0' ? 'info' :'danger')))" size="mini">
+            {{ scope.row.authStatus == '1' ? '未审核' : (scope.row.authStatus == '2' ? '审核通过' :(scope.row.authStatus == '0' ? '未认证' :'审核失败')) }}
           </el-tag>
         </template>
       </el-table-column>

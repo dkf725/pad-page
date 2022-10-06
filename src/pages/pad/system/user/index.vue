@@ -297,7 +297,7 @@ export default {
     },
     //修改状态
     handleStatusChange(row){
-      this.$confirm('确定要停用'+row.name+'用户吗？','系统提示',
+      this.$confirm('确定要修改'+row.name+'用户状态吗？','系统提示',
           {
             confirmButtonText:'确定',
             cancelButtonText:'取消',

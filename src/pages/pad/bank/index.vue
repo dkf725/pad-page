@@ -38,7 +38,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            v-auth:permission="`system:bank:remove`"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -47,8 +46,8 @@
             plain
             icon="el-icon-download"
             size="mini"
+            :disabled="multiple"
             @click="handleExport"
-            v-auth:permission="`system:bank:export`"
         >导出</el-button>
       </el-col>
     </el-row>
@@ -126,14 +125,12 @@
           <el-input v-model="form.phone" placeholder="请输入电话号码" />
         </el-form-item>
         <el-form-item label="省市区">
-        <div id="app" >
           <el-cascader
               size="large"
               :options="options"
               v-model="selectedOptions"
               @change="handleChange">
           </el-cascader>
-        </div>
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址" />
@@ -186,6 +183,26 @@ export default {
         bankName: [
           { required: true, message: "银行名称不能为空", trigger: "blur" },
           { min: 2, max: 20, message: '银行名称长度必须介于 2 和 20 之间', trigger: 'blur' }
+        ],
+        borrowYearRate: [
+          { required: true, message: "年化利率不能为空", trigger: "blur" }
+        ],
+        overdueRate: [
+          { required: true, message: "逾期利率不能为空", trigger: "blur" }
+        ],
+        description: [
+          { required: true, message: "产品说明不能为空", trigger: "blur" }
+        ],
+        phone: [
+          {
+            required: true,
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+        address: [
+          { required: true, message: "地址不能为空", trigger: "blur" }
         ]
       }
     }
@@ -261,7 +278,7 @@ export default {
     //删除按钮
     handleDelete(row){
       const bankNo = row.bankNo || this.ids;
-      this.$confirm('确定要删除编号为'+bankNo+'角色吗？','系统提示',
+      this.$confirm('确定要删除编号为'+bankNo+'的银行吗？','系统提示',
           {
             confirmButtonText:'确定',
             cancelButtonText:'取消',
