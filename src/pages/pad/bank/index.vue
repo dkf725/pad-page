@@ -124,15 +124,13 @@
         <el-form-item label="电话号码" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入电话号码" />
         </el-form-item>
-        <el-form-item label="省市区">
-        <div id="app" >
+        <el-form-item label="省市区" prop="areaName">
           <el-cascader
               size="large"
               :options="options"
               v-model="selectedOptions"
               @change="handleChange">
           </el-cascader>
-        </div>
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址" />
@@ -185,6 +183,29 @@ export default {
         bankName: [
           { required: true, message: "银行名称不能为空", trigger: "blur" },
           { min: 2, max: 20, message: '银行名称长度必须介于 2 和 20 之间', trigger: 'blur' }
+        ],
+        borrowYearRate: [
+          { required: true, message: "年化利率不能为空", trigger: "blur" }
+        ],
+        overdueRate: [
+          { required: true, message: "逾期利率不能为空", trigger: "blur" }
+        ],
+        description: [
+          { required: true, message: "产品说明不能为空", trigger: "blur" }
+        ],
+        phone: [
+          {
+            required: true,
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+        areaName: [
+          { type: 'array', required: true, message: "请选择区域", trigger: "blur" }
+        ],
+        address: [
+          { required: true, message: "地址不能为空", trigger: "blur" }
         ]
       }
     }
