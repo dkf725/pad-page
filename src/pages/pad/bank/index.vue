@@ -38,7 +38,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            v-auth:permission="`system:bank:remove`"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -47,8 +46,8 @@
             plain
             icon="el-icon-download"
             size="mini"
+            :disabled="multiple"
             @click="handleExport"
-            v-auth:permission="`system:bank:export`"
         >导出</el-button>
       </el-col>
     </el-row>
@@ -261,7 +260,7 @@ export default {
     //删除按钮
     handleDelete(row){
       const bankNo = row.bankNo || this.ids;
-      this.$confirm('确定要删除编号为'+bankNo+'角色吗？','系统提示',
+      this.$confirm('确定要删除编号为'+bankNo+'的银行吗？','系统提示',
           {
             confirmButtonText:'确定',
             cancelButtonText:'取消',

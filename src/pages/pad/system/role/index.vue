@@ -73,6 +73,7 @@
             plain
             icon="el-icon-download"
             size="mini"
+            :disabled="multiple"
             @click="handleExport"
         >导出</el-button>
       </el-col>
