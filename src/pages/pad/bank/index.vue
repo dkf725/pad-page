@@ -124,7 +124,7 @@
         <el-form-item label="电话号码" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入电话号码" />
         </el-form-item>
-        <el-form-item label="省市区" prop="areaName">
+        <el-form-item label="省市区">
           <el-cascader
               size="large"
               :options="options"
@@ -200,9 +200,6 @@ export default {
             message: "请输入正确的手机号码",
             trigger: "blur"
           }
-        ],
-        areaName: [
-          { type: 'array', required: true, message: "请选择区域", trigger: "blur" }
         ],
         address: [
           { required: true, message: "地址不能为空", trigger: "blur" }

@@ -1,6 +1,13 @@
 <template>
     <a-card>
       <el-descriptions title="信息管理" :column="3" border>
+        <template slot="extra"  v-if="detail.authStatus != -1">
+          <el-button
+              size="small"
+              type="danger"
+              @click="showModal()"
+          >驳回</el-button>
+        </template>
         <el-descriptions-item label="企业名称" prop="name">
           <template slot="label">
             <i class="el-icon-user"></i>
@@ -81,7 +88,7 @@
           </template>
         </el-descriptions-item>
 
-        <el-descriptions-item label="审核操作" prop="status" :span="3">
+        <el-descriptions-item label="审核操作" prop="status" :span="3"  v-if="detail.authStatus == 1">
           <template slot="label">
             <i class="el-icon-open"></i>
             审核操作
@@ -90,23 +97,12 @@
             <el-switch
                 v-model="detail.authStatus"
                 active-text="审核通过"
-                inactive-text="审核未通过"
+                inactive-text="未审核"
                 :active-value="2"
-                :inactive-value="-1"
+                :inactive-value="1"
                 @change="StatusChange()"
             >
             </el-switch>
-          </template>
-        </el-descriptions-item>
-        <el-descriptions-item label="驳回操作" prop="isDeleted" >
-          <template slot="label">
-            <i class="el-icon-close"></i>
-            驳回操作
-          </template>
-          <template>
-            <el-button
-                @click="showModal()"
-            >驳回</el-button>
           </template>
         </el-descriptions-item>
       </el-descriptions>
@@ -114,7 +110,7 @@
 </template>
 
 <script>
-import {getDetailList,modifyStatus,changeStatus} from "@/services/pad/company/detail";
+import {getDetailList,modifyStatus/*,changeStatus*/} from "@/services/pad/company/detail";
 
 export default {
   name: "company_detail",
@@ -146,9 +142,9 @@ export default {
       modifyStatus(this.id,this.status)
       .then(res=>{
         this.$message.success(res.data.message)
+        this.getCompanyDetailList()
       })
     },
-
     //审批按键
     showModal() {
       this.$confirm('确定要驳回审批信息吗？','系统提示',
@@ -157,10 +153,12 @@ export default {
             cancelButtonText:'取消',
             type:'warning'
           }).then(()=> {
-        changeStatus(this.id).then(res => {
-          this.$message.success(res.data.message)
-          this.getCompanyDetailList()
-        })
+            //修改状态即可
+        modifyStatus(this.id,-1)
+            .then(res=>{
+              this.$message.success(res.data.message)
+              this.getCompanyDetailList()
+            })
       })
     },
   }
