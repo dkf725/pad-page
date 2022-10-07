@@ -49,7 +49,7 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-auth:permission="`system:message:update`"
-              v-if="scope.row.reply==''"
+              v-if="scope.row.reply==null || scope.row.reply==''"
           >回复</el-button>
           <el-button
               size="mini"
