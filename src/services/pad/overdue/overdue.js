@@ -2,7 +2,8 @@ import {request, METHOD} from '@/utils/request'
 
 
 export default {
-    getOverdueList
+    getOverdueList,
+    refreshOverdueList
 }
 
 /**
@@ -17,4 +18,15 @@ export function getOverdueList(current,limit,queryParams){
         `/pad/overdue/list/${current}/${limit}`,
         METHOD.POST,
         queryParams)
+}
+
+
+/**
+ * 检查逾期
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export function refreshOverdueList(){
+    return request(
+        `/pad/overdue/add`,
+        METHOD.GET)
 }
