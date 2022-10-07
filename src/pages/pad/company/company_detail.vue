@@ -1,7 +1,7 @@
 <template>
     <a-card>
       <el-descriptions title="信息管理" :column="3" border>
-        <template slot="extra"  v-if="detail.authStatus != -1">
+        <template slot="extra"  v-if="detail.authStatus == 1">
           <el-button
               size="small"
               type="danger"

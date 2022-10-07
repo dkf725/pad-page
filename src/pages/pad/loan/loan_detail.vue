@@ -64,7 +64,7 @@
       <el-tag type="primary" v-if="loanInfo.status == '4'">银行材料审核</el-tag>
       <el-tag type="success" v-if="loanInfo.status == '2'">审核成功</el-tag>
       <el-tag type="danger" v-if="loanInfo.status == '-1'">审核失败</el-tag>
-      <el-tag type="danger" v-if="loanInfo.status == '5'">已放款</el-tag>
+      <el-tag type="success" v-if="loanInfo.status == '5'">已放款</el-tag>
     </el-descriptions-item>
     <el-descriptions-item>
       <template slot="label">
