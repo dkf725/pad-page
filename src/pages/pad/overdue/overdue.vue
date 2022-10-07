@@ -1,31 +1,17 @@
 <template>
   <a-card>
+    <el-button
+        size="mini"
+        type="primary"
+        @click="handleAdd()"
+    >检查逾期</el-button>
     <el-table :data="overdueList" >
-<!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="逾期编号" prop="id" width="100" align="center"/>
       <el-table-column label="还款编号" prop="rid" width="120" align="center"/>
       <el-table-column label="逾期利率" prop="overdueRate" width="120" align="center"/>
       <el-table-column label="逾期金额" prop="money" width="120" align="center"/>
-      <el-table-column label="逾期开始时间" prop="beginTime" width="120" align="center" :formatter="dateFormat"/>
+      <el-table-column label="逾期开始时间" prop="createTime" width="120" align="center" :formatter="dateFormat"/>
       <el-table-column label="逾期结束时间" prop="endTime" width="120" align="center" :formatter="dateFormat2"/>
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope.row)"
-              v-auth:permission="`company:loanInfo:edit`"
-          >修改</el-button>
-          <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-auth:permission="`company:loanInfo:remove`"
-          >删除</el-button>
-        </template>
-      </el-table-column>-->
     </el-table>
 
     <!--分页-->
@@ -42,7 +28,7 @@
 </template>
 
 <script>
-import {getOverdueList} from "@/services/pad/overdue/overdue";
+import {getOverdueList,refreshOverdueList} from "@/services/pad/overdue/overdue";
 
 export default {
   name: "overdue",
@@ -56,12 +42,12 @@ export default {
   },
   created() {
     //初始化贷款信息
-    this.getList()
+    this.getList(this.page,this.limit)
   },
   methods:{
     // 时间格式化
     dateFormat: function(row) {
-      var t = new Date(row.beginTime)// row 表示一行数据, createTime 表示要格式化的字段名称
+      var t = new Date(row.createTime)// row 表示一行数据, createTime 表示要格式化的字段名称
       if(!t){
         return ''
       }
@@ -74,14 +60,16 @@ export default {
       return time < 10 ? '0'+ time : time
     },
     dateFormat2: function(row) {
-      var t = new Date(row.endTime)// row 表示一行数据, createTime 表示要格式化的字段名称
-      if(!t){
-        return ''
+      if (row.endTime !=null){
+        var t = new Date(row.endTime)// row 表示一行数据, createTime 表示要格式化的字段名称
+        if(!t){
+          return ''
+        }
+        let year = t.getFullYear()
+        let month = this.dateIfAddZero(t.getMonth()+1)
+        let day = this.dateIfAddZero(t.getDate())
+        return year + '-' + month + '-' + day
       }
-      let year = t.getFullYear()
-      let month = this.dateIfAddZero(t.getMonth()+1)
-      let day = this.dateIfAddZero(t.getDate())
-      return year + '-' + month + '-' + day
     },
     //每页条数改变时
     handleSizeChange(size){
@@ -92,15 +80,20 @@ export default {
       this.getList(page,this.limit)
     },
     //查询所有企业用户基本信息
-    getList(page=1){
-      this.page = page
-      getOverdueList(this.page,this.limit)
+    getList(page,limit){
+      getOverdueList(page,limit)
           .then(res=>{
             console.log(res)
             this.overdueList = res.data.data.overdueList
             this.total = res.data.data.total
           })
     },
+    handleAdd(){
+      refreshOverdueList().then(res=>{
+        this.$message.success(res.data.message)
+        this.getList(this.page,this.limit)
+      })
+    }
   }
 }
 </script>
